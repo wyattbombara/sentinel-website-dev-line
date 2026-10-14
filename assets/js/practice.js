@@ -299,7 +299,7 @@
           </ul>
           <div class="practice__again">
             <button type="button" class="btn" data-practice-again>Sort them again</button>
-            <a class="btn btn--gold" href="${getHref}">Get Sentinel free</a>
+            <a class="btn btn--gold" href="${getHref}">View release status</a>
           </div>
         </div>`;
       stage.querySelector('[data-practice-again]').addEventListener('click', () => { round = 0; answers = {}; show(true); });

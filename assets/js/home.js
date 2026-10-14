@@ -14,7 +14,6 @@
   const rank = (badge) => RANK[badge || null];
 
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const wait = (ms) => new Promise((r) => setTimeout(r, reduced ? 0 : ms));
 
   /** Masks for every threat that earned a colour, worst first. */
   const flagged = (v) => ORDER.filter((t) => v.threats[t] && v.threats[t].badge)
@@ -36,7 +35,6 @@
     const scanline = $('[data-scanline]', stage);
     const queryText = $('[data-query-text]', stage);
     const verdictFloat = $('[data-float="verdict"]', stage);
-    const mailFloat = $('[data-float="mail"]', stage);
     const chips = $$('[data-query]', stage);
     const replay = $('[data-replay]', stage);
     const v = {
@@ -91,7 +89,7 @@
     }
 
     function renderResults(set) {
-      serp.innerHTML = '<div class="serp__q">About 48,200,000 results</div>' + set.results.map((r, i) => `
+      serp.innerHTML = '<div class="serp__q">Example search results · select a result for details</div>' + set.results.map((r, i) => `
         <div class="res is-entering" role="button" tabindex="0" aria-pressed="false" style="--d:${i * 0.06}s" data-i="${i}">
           <div class="res__title">${esc(r.title)} <span class="masks"></span></div>
           <div class="res__url">${esc(r.url)}</div>
@@ -113,91 +111,37 @@
       });
     }
 
-    async function typeQuery(text, id) {
-      if (reduced) { queryText.textContent = text; return; }
-      queryText.textContent = '';
-      for (let i = 1; i <= text.length; i++) {
-        if (id !== run) return;
-        queryText.textContent = text.slice(0, i);
-        await wait(22 + Math.random() * 30);
-      }
-    }
-
     async function play(key) {
-      if (!data) return;
+      if (!data || !data.serp[key]) return;
       const id = ++run;
       current = key;
       const set = data.serp[key];
-      chips.forEach((c) => c.setAttribute('aria-selected', String(c.dataset.query === key)));
-      verdictFloat.classList.remove('is-on');
-      mailFloat.classList.remove('is-on');
-      await typeQuery(set.query, id);
-      if (id !== run) return;
+      chips.forEach(c => { c.setAttribute('aria-selected', String(c.dataset.query === key)); c.tabIndex = c.dataset.query === key ? 0 : -1; });
+      queryText.textContent = set.query;
       renderResults(set);
       serp.style.setProperty('--scan-end', `${serp.offsetHeight + 20}px`);
       scanline.classList.remove('is-running');
       void scanline.offsetWidth;
       if (!reduced) scanline.classList.add('is-running');
-
-      // After the gold line, the results corrupt into binary for a moment (delicate scanning digging in, binary.js):
-      // gold digits, and over each result's title the masks' colours, settling on its own verdict once it is in.
-      const verdictColor = new Map();
-      const dig = window.SentinelBinary ? window.SentinelBinary.dig(serp, {
-        links: () => {
-          const s = serp.getBoundingClientRect();
-          return rows.map((row, i) => {
-            const t = $('.res__title', row);
-            if (!t) return null;
-            const r = t.getBoundingClientRect();
-            return { x: r.left - s.left, y: r.top - s.top, w: r.width, h: r.height, color: verdictColor.get(i) || null };
-          }).filter(Boolean);
-        }
-      }) : null;
-
-      await Promise.all(rows.map(async (row, i) => {
-        await wait(280 + (row.offsetTop / serp.offsetHeight) * 2300);
-        if (id !== run) return;
+      rows.forEach((row, i) => {
         const result = set.results[i];
-        const slot = $('.masks', row);
         const threats = flagged(result);
-        verdictColor.set(i, threats.length ? result.threats[threats[0]].badge : 'green');
-        threats.forEach((t, k) => {
-          const m = document.createElement('span');
-          m.className = `m m--${result.threats[t].badge}`;
-          m.title = result.threats[t].label;
-          m.setAttribute('role', 'img');
-          m.setAttribute('aria-label', `${Masks.NAMES[t]}: ${result.threats[t].label}`);
-          m.innerHTML = Masks.svg(t);
-          slot.appendChild(m);
-          setTimeout(() => m.classList.add('is-on'), reduced ? 0 : k * 110);
-        });
-        if (threats.length && result.threats[threats[0]].badge === 'red') row.classList.add('is-danger');
-      }));
-      if (dig) { await wait(250); await dig.finish(); }
-      if (id !== run) return;
-
-      // Open the most dangerous result so the panel always has something to explain.
-      let worst = 0;
-      set.results.forEach((r, i) => {
-        const score = (x) => Math.max(...ORDER.map((t) => rank(x.threats[t].badge) * 1000 + x.threats[t].score));
-        if (score(r) > score(set.results[worst])) worst = i;
+        const slot = $('.masks', row);
+        slot.innerHTML = threats.length ? threats.map(t => `<span class="m m--${result.threats[t].badge} is-on" role="img" aria-label="${esc(result.threats[t].label)}">${Masks.svg(t)}</span>`).join('') : '<span class="m m--clear is-on" role="img" aria-label="No warning signs in this example">✓</span>';
       });
+      let worst = 0;
+      const score = x => Math.max(...ORDER.map(t => rank(x.threats[t].badge) * 1000 + x.threats[t].score));
+      set.results.forEach((r,i) => { if (score(r) > score(set.results[worst])) worst = i; });
       showVerdict(set.results[worst], rows[worst]);
-      await wait(600);
-      if (id === run) mailFloat.classList.add('is-on');
+      if (id === run) stage.setAttribute('aria-busy', 'false');
     }
 
     chips.forEach((chip, i) => {
-      chip.addEventListener('click', () => {
-        // The window turns over to the new search.
-        const win = $('.window', stage);
-        win.classList.remove('is-swapping');
-        void win.offsetWidth;
-        win.classList.add('is-swapping');
-        play(chip.dataset.query);
-      });
+      chip.tabIndex = chip.getAttribute('aria-selected') === 'true' ? 0 : -1;
+      chip.addEventListener('click', () => play(chip.dataset.query));
       chip.addEventListener('keydown', (ev) => {
         if (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return;
+        ev.preventDefault();
         const next = chips[(i + (ev.key === 'ArrowRight' ? 1 : chips.length - 1)) % chips.length];
         next.focus();
         next.click();
@@ -206,7 +150,7 @@
     replay.addEventListener('click', () => play(current));
 
     let started = false;
-    new IntersectionObserver((entries, obs) => {
+    new Site.Observer((entries, obs) => {
       if (!entries[0].isIntersecting) return;
       obs.disconnect();
       stage.classList.add('is-in');
@@ -312,7 +256,7 @@
     const stop = (byUser = false) => {
       clearInterval(timer);
       timer = null;
-      card.dataset.cycling = byUser ? 'paused' : 'false';
+      card.dataset.cycling = 'paused';
       cycle.textContent = 'Play stages';
       cycle.setAttribute('aria-label', `Play ${name} severity stages`);
     };
@@ -347,11 +291,14 @@
       });
     });
 
+    document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); });
+    card.addEventListener('mouseenter', () => stop());
+    card.addEventListener('focusin', ev => { if (ev.target !== cycle) stop(); });
     // Only cycle while the card is actually on screen.
     new Site.Observer((entries) => {
       const visible = entries[0].isIntersecting;
-      if (visible && !timer && card.dataset.cycling !== 'paused') start();
-      else if (!visible && timer) { clearInterval(timer); timer = null; }
+      if (visible && !document.hidden && !timer && card.dataset.cycling === 'true') start();
+      else if (!visible && timer) stop();
     }, { threshold: 0.4 }).observe(card);
   }
 
@@ -462,7 +409,7 @@
       const right = marks.filter((m) => m === 'right').length;
       const max = ROUNDS * 100;
       const line = points >= max * 0.8
-        ? 'Sharp eyes. Sentinel just does this for every link, automatically.'
+        ? 'Sharp eyes. These saved examples show the clues behind each verdict.'
         : points >= max * 0.5
           ? 'Not bad, but a couple slipped through. Scammers only need one.'
           : 'These are hard to spot by eye. That&rsquo;s exactly why Sentinel exists.';
@@ -476,7 +423,7 @@
           <p>${right} of ${ROUNDS} exactly right. ${line}</p>
           <div class="hero__cta" style="justify-content:center">
             <button type="button" class="btn btn--lg" data-again>Play again</button>
-            <a class="btn btn--gold btn--lg" href="${getHref}">Get Sentinel free</a>
+            <a class="btn btn--gold btn--lg" href="${getHref}">View release status</a>
           </div>
         </div>`;
       $('[data-again]', stageEl).addEventListener('click', () => examples.then((d) => {
@@ -488,7 +435,7 @@
 
     // Number keys answer while the game is on screen.
     let gameVisible = false;
-    new IntersectionObserver((e) => { gameVisible = e[0].isIntersecting; }, { threshold: 0.15 }).observe(game);
+    new Site.Observer((e) => { gameVisible = e[0].isIntersecting; }, { threshold: 0.15 }).observe(game);
     document.addEventListener('keydown', (ev) => {
       if (!gameVisible || answered || ev.altKey || ev.ctrlKey || ev.metaKey) return;
       if (/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return;
@@ -551,6 +498,7 @@
       button.disabled = true;
       button.innerHTML = '<span class="spinner" role="img" aria-label="Checking"></span>';
       out.setAttribute('aria-busy', 'true');
+      input.removeAttribute('aria-invalid');
       const dig = !here && tryMode === 'delicate' && window.SentinelBinary ? window.SentinelBinary.dig(out) : null;
       try {
         if (here) {
@@ -571,11 +519,12 @@
         renderTry(body.verdict);
       } catch (err) {
         if (dig) dig.stop();
+        input.setAttribute('aria-invalid', 'true');
         // A failed connection surfaces as a TypeError whose text is the browser's, not ours.
         out.innerHTML = `<div class="try__empty"><p>${esc(err.name === 'Error' ? err.message : 'Could not check that link right now.')}</p>${here ? '' : '<a class="btn btn--gold btn--sm" href="/signup">Create free account</a>'}</div>`;
       } finally {
         button.disabled = false;
-        button.textContent = 'Check';
+        button.textContent = 'Check link';
         out.removeAttribute('aria-busy');
       }
     });
@@ -632,422 +581,4 @@
     row.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggle(); } });
   });
 
-  /* =========================================================== manifesto */
-
-  // One line per colour, chosen by how far through the pinned section the reader has scrolled.
-  const manifesto = $('[data-manifesto]');
-  if (manifesto) {
-    const lines = $$('.manifesto__line', manifesto);
-    let queued = false;
-    const pick = () => {
-      queued = false;
-      const r = manifesto.getBoundingClientRect();
-      const p = Math.min(0.999, Math.max(0, -r.top / Math.max(1, r.height - innerHeight)));
-      const at = Math.floor(p * lines.length);
-      lines.forEach((line, i) => line.classList.toggle('is-on', i === at));
-      // The 3D mask (cosmos.js, mask3d.js) turns the colour of the line being read, smoothly, as it watches you.
-      if (manifesto.dataset.on !== String(at)) {
-        const m3 = window.SentinelMask3D && window.SentinelMask3D.get($('.manifesto__mask', manifesto));
-        if (m3) m3.blend(['yellow', 'orange', 'red'][at], 700);
-      }
-      manifesto.dataset.on = String(at);
-    };
-    addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(pick); } }, { passive: true });
-    pick();
-  }
-
-  /* ============================================== the hero: unmask and dots */
-
-  // Two canvases in the hero's stage. Underneath the mask, a field of gold dots that ripples away from the pointer.
-  // Over it, what Sentinel sees: binary, scam marks and warnings, shown only where the pointer brushes a soft, smoky
-  // mask that lingers a second and fades. Both draw only while something moves, never offscreen, never while the
-  // page scrolls. A finger gets one slow wipe instead of a brush and no dots; reduced motion gets a still split view.
-  const heroStage = $('.hero__stage');
-  if (heroStage && window.HTMLCanvasElement) {
-    const stage = heroStage;
-    const hero = stage.closest('.hero');
-    const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
-    const now = () => performance.now();
-    let seen = false;
-    let scrollingUntil = 0;
-    let rect = null;
-    const measure = () => { rect = stage.getBoundingClientRect(); };
-    const canvas = (cls) => {
-      const c = document.createElement('canvas');
-      c.className = cls;
-      c.setAttribute('aria-hidden', 'true');
-      return c;
-    };
-    const loops = [];
-    const kick = () => loops.forEach((l) => l.wake());
-    new Site.Observer((entries) => { seen = entries[0].isIntersecting; if (seen) kick(); }).observe(stage);
-    addEventListener('scroll', () => { scrollingUntil = now() + 180; loops.forEach((l) => l.still && l.still()); }, { passive: true });
-
-    /* -------- the dot field */
-
-    if (fine) {
-      const dots = canvas('hero__dots');
-      stage.prepend(dots);
-      const ctx = dots.getContext('2d');
-      const GAP = 24;
-      let w = 0;
-      let h = 0;
-      let dpr = 1;
-      let px = -1e4;
-      let py = -1e4;
-      let tx = px;
-      let ty = py;
-      let energy = 0;
-      let movedAt = 0;
-      let raf = 0;
-      const gold = getComputedStyle(document.documentElement).getPropertyValue('--gold-rgb').trim().split(/\s+/).join(',') || '210,172,99';
-      const draw = (t) => {
-        ctx.clearRect(0, 0, w, h);
-        const R = 170;
-        const s = 1.6 * dpr;
-        const base = new Path2D();
-        const lit = new Path2D();
-        for (let y = GAP / 2; y < h / dpr; y += GAP) {
-          for (let x = GAP / 2; x < w / dpr; x += GAP) {
-            let dx = x - px;
-            let dy = y - py;
-            const d = Math.sqrt(dx * dx + dy * dy) || 1;
-            let ox = 0;
-            let oy = 0;
-            if (energy > 0.01 && d < 420) {
-              // Pushed out of the pointer's way, and a ring of ripples travelling outward from it.
-              const push = d < R ? (1 - d / R) * (1 - d / R) * 22 : 0;
-              const wave = Math.sin(d * 0.06 - t * 0.009) * 5 * Math.exp(-d / 160);
-              const k = energy * (push + wave) / d;
-              ox = dx * k;
-              oy = dy * k;
-            }
-            (energy > 0.01 && d < R ? lit : base).rect((x + ox) * dpr - s / 2, (y + oy) * dpr - s / 2, s, s);
-          }
-        }
-        ctx.fillStyle = `rgba(${gold},.16)`;
-        ctx.fill(base);
-        ctx.fillStyle = `rgba(${gold},${(0.16 + 0.5 * energy).toFixed(3)})`;
-        ctx.fill(lit);
-      };
-      const frame = (t) => {
-        raf = 0;
-        if (!seen || document.hidden) return;
-        if (t < scrollingUntil) { energy = 0; draw(t); return; }
-        px += (tx - px) * 0.2;
-        py += (ty - py) * 0.2;
-        // Full while the pointer moves, gone about a second after it stops.
-        energy += ((t - movedAt < 120 ? 1 : 0) - energy) * (t - movedAt < 120 ? 0.12 : 0.05);
-        draw(t);
-        if (energy > 0.01) raf = requestAnimationFrame(frame);
-        else { energy = 0; draw(t); }
-      };
-      const size = () => {
-        dpr = Math.min(devicePixelRatio || 1, 2);
-        w = dots.width = Math.round(stage.clientWidth * dpr);
-        h = dots.height = Math.round(stage.clientHeight * dpr);
-        energy = 0;
-        draw(0);
-      };
-      const loop = {
-        wake() { if (!raf && seen && energy > 0.01) raf = requestAnimationFrame(frame); },
-        point(x, y) {
-          if (reduced) return;
-          if (px < -1e3) { px = x; py = y; }
-          tx = x; ty = y; movedAt = now();
-          if (energy < 0.02) energy = 0.02;
-          loop.wake();
-        }
-      };
-      loops.push(loop);
-      if ('ResizeObserver' in window) new ResizeObserver(size).observe(stage); else size();
-    }
-
-    /* -------- what Sentinel sees */
-
-    const view = canvas('hero__unmask');
-    stage.appendChild(view);
-    const vctx = view.getContext('2d');
-    const under = document.createElement('canvas');
-    const trail = document.createElement('canvas');
-    const tctx = trail.getContext('2d');
-    // The trail again, in gold: added over the reveal so its soft edge glows gold instead of greying the hero.
-    const haze = document.createElement('canvas');
-    const hctx = haze.getContext('2d');
-    const TRAIL = 0.5;          // the brush is soft: its mask is kept at half size and drawn scaled up
-    let vw = 0;
-    let vh = 0;
-    let vdpr = 1;
-    let ready = false;
-
-    // One puff of smoke, drawn once: a cluster of soft blobs, so each dab has a cloudy, uneven edge.
-    const puff = document.createElement('canvas');
-    puff.width = puff.height = 128;
-    {
-      const p = puff.getContext('2d');
-      let seed = 7;
-      const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-      for (let i = 0; i < 14; i++) {
-        const r = 18 + rnd() * 30;
-        const a = rnd() * Math.PI * 2;
-        const d = rnd() * 30;
-        const x = 64 + Math.cos(a) * d;
-        const y = 64 + Math.sin(a) * d;
-        const g = p.createRadialGradient(x, y, 0, x, y, r);
-        g.addColorStop(0, 'rgba(0,0,0,.62)');
-        g.addColorStop(1, 'rgba(0,0,0,0)');
-        p.fillStyle = g;
-        p.fillRect(0, 0, 128, 128);
-      }
-      // A solid core, so the middle of the stroke shows what is underneath in full and only the edge is smoke.
-      const core = p.createRadialGradient(64, 64, 0, 64, 64, 50);
-      core.addColorStop(0, 'rgba(0,0,0,1)');
-      core.addColorStop(0.55, 'rgba(0,0,0,.85)');
-      core.addColorStop(1, 'rgba(0,0,0,0)');
-      p.fillStyle = core;
-      p.fillRect(0, 0, 128, 128);
-    }
-
-    // The page underneath: binary in the lacquer, the three masks, and the warnings Sentinel would raise here.
-    const C = (Masks && Masks.COLORS) || { yellow: '#f5c542', orange: '#f08a24', red: '#e5484d' };
-    const marks = [['scam', C.red], ['virus', C.orange], ['malware', C.yellow]].map(([t, c]) => {
-      const img = new Image();
-      if (Masks) img.src = `data:image/svg+xml,${encodeURIComponent(Masks.svg(t, `xmlns="http://www.w3.org/2000/svg" width="128" height="128" style="color:${c}"`))}`;
-      return { img, c };
-    });
-    const WARN = [
-      ['Confirmed scam', C.red], ['Fake login page', C.red], ['Look-alike domain', C.orange],
-      ['Program disguised as a document', C.orange], ['Probably dangerous', C.orange], ['Look closer', C.yellow],
-      ['Fake browser update', C.yellow], ['Brand impersonation', C.red]
-    ];
-    const HOSTS = ['paypa1-secure-login.com', 'Invoice_March.pdf.exe', 'paypal.com.secure-verify-login.xyz', 'coinbase-airdrop-claim.tk'];
-    const css = getComputedStyle(document.documentElement);
-    const MONO = css.getPropertyValue('--mono').trim() || 'monospace';
-    const SERIF = css.getPropertyValue('--display').trim() || 'serif';
-    function paintUnder() {
-      under.width = vw;
-      under.height = vh;
-      const u = under.getContext('2d');
-      const W = vw / vdpr;
-      const H = vh / vdpr;
-      u.setTransform(vdpr, 0, 0, vdpr, 0, 0);
-      const bg = u.createRadialGradient(W / 2, H * 0.4, 0, W / 2, H * 0.4, Math.max(W, H) * 0.7);
-      bg.addColorStop(0, '#2c210f');
-      bg.addColorStop(0.55, '#140f08');
-      bg.addColorStop(1, '#090705');
-      u.fillStyle = bg;
-      u.fillRect(0, 0, W, H);
-      let seed = 11;
-      const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-      // Binary, row by row.
-      u.font = `12px ${MONO}`;
-      u.textBaseline = 'top';
-      const cols = Math.ceil(W / 14);
-      for (let y = 6, row = 0; y < H; y += 17, row++) {
-        let line = '';
-        for (let i = 0; i < cols; i++) line += (rnd() < 0.5 ? '0' : '1') + ' ';
-        u.fillStyle = `rgba(226,194,127,${row % 3 ? 0.34 : 0.62})`;
-        u.fillText(line, (row % 2) * 7, y);
-      }
-      // Marks and warnings, scattered on a loose grid so they never pile up.
-      const gc = W > 900 ? 4 : 2;
-      const gr = H > 700 ? 3 : 2;
-      let n = 0;
-      for (let r = 0; r < gr; r++) {
-        for (let c = 0; c < gc; c++, n++) {
-          let cx = (c + 0.2 + rnd() * 0.5) * (W / gc);
-          const cy = (r + 0.25 + rnd() * 0.5) * (H / gr);
-          if (n % 3 === 0) {
-            const m = marks[(n / 3) % 3];
-            const s = 78 + rnd() * 44;
-            u.save();
-            u.shadowColor = m.c;
-            u.shadowBlur = 36;
-            if (m.img.complete && m.img.naturalWidth) u.drawImage(m.img, cx - s / 2, cy - s / 2, s, s);
-            u.restore();
-          } else {
-            const [label, col] = WARN[n % WARN.length];
-            u.font = `500 13px ${MONO}`;
-            const tw = u.measureText(label.toUpperCase()).width;
-            // Kept whole inside the stage, however narrow.
-            cx = Math.max(24, Math.min(cx, W - tw - 34));
-            u.save();
-            u.strokeStyle = col;
-            u.fillStyle = 'rgba(11,9,6,.85)';
-            u.shadowColor = col;
-            u.shadowBlur = 16;
-            u.beginPath();
-            if (u.roundRect) u.roundRect(cx - 14, cy - 16, tw + 40, 32, 16); else u.rect(cx - 14, cy - 16, tw + 40, 32);
-            u.fill();
-            u.stroke();
-            u.restore();
-            u.fillStyle = col;
-            u.beginPath();
-            u.arc(cx + 2, cy, 4, 0, Math.PI * 2);
-            u.fill();
-            u.textBaseline = 'middle';
-            u.fillText(label.toUpperCase(), cx + 14, cy + 1);
-            const host = HOSTS[n % HOSTS.length];
-            u.font = `italic 17px ${SERIF}`;
-            u.fillStyle = 'rgba(239,230,212,.55)';
-            const hw = u.measureText(host).width;
-            const hx = Math.max(8, Math.min(cx - 10, W - hw - 10));
-            u.fillText(host, hx, cy + 34);
-            u.fillStyle = col;
-            u.fillRect(hx - 2, cy + 34, hw + 4, 1.5);
-            u.textBaseline = 'top';
-          }
-        }
-      }
-    }
-
-    // Reduced motion: a still split, the right of the stage seen through, behind a gold seam.
-    function paintSplit() {
-      vctx.clearRect(0, 0, vw, vh);
-      vctx.drawImage(under, 0, 0);
-      vctx.globalCompositeOperation = 'destination-in';
-      const g = vctx.createLinearGradient(vw * 0.5, 0, vw * 0.62, 0);
-      g.addColorStop(0, 'rgba(0,0,0,0)');
-      g.addColorStop(1, 'rgba(0,0,0,.92)');
-      vctx.fillStyle = g;
-      vctx.fillRect(0, 0, vw, vh);
-      vctx.globalCompositeOperation = 'source-over';
-      vctx.fillStyle = 'rgba(226,194,127,.7)';
-      vctx.fillRect(Math.round(vw * 0.56), 0, Math.max(1, vdpr), vh);
-    }
-
-    let last = null;      // the brush's previous point, in stage pixels
-    let next = null;      // where the pointer is now
-    let lastDab = 0;
-    let quiet = 0;        // ms of drawn frames since the last dab (a stalled machine must not skip the linger)
-    let vraf = 0;
-    let prevT = 0;
-    const dab = (x, y) => {
-      const s = (250 + Math.random() * 100) * TRAIL;
-      tctx.save();
-      tctx.translate(x * TRAIL, y * TRAIL);
-      tctx.rotate(Math.random() * Math.PI * 2);
-      tctx.drawImage(puff, -s / 2, -s / 2, s, s);
-      tctx.restore();
-    };
-    const clearAll = () => {
-      tctx.clearRect(0, 0, trail.width, trail.height);
-      vctx.clearRect(0, 0, vw, vh);
-      last = next = null;
-    };
-    const vframe = (t) => {
-      vraf = 0;
-      if (!ready || document.hidden) return;
-      if (!seen || t < scrollingUntil) { clearAll(); return; }
-      const dt = Math.min(64, prevT ? t - prevT : 16);
-      prevT = t;
-      // It lingers while the pointer moves and a moment after (a slow half-life), then fades quickly, and is wiped
-      // clean once it has gone quiet.
-      quiet += dt;
-      const half = quiet < 600 ? 1200 : 300;
-      tctx.globalCompositeOperation = 'destination-out';
-      tctx.fillStyle = `rgba(0,0,0,${(1 - Math.pow(0.5, dt / half)).toFixed(4)})`;
-      tctx.fillRect(0, 0, trail.width, trail.height);
-      tctx.globalCompositeOperation = 'source-over';
-      if (next) {
-        const from = last || next;
-        const dist = Math.hypot(next.x - from.x, next.y - from.y);
-        const steps = Math.max(1, Math.ceil(dist / 22));
-        for (let i = 1; i <= steps; i++) dab(from.x + (next.x - from.x) * i / steps, from.y + (next.y - from.y) * i / steps);
-        last = next;
-        next = null;
-        lastDab = t;
-        quiet = 0;
-      }
-      if (quiet > 2000) { clearAll(); prevT = 0; return; }
-      vctx.clearRect(0, 0, vw, vh);
-      vctx.globalCompositeOperation = 'source-over';
-      vctx.drawImage(under, 0, 0);
-      vctx.globalCompositeOperation = 'destination-in';
-      vctx.drawImage(trail, 0, 0, vw, vh);
-      hctx.globalCompositeOperation = 'copy';
-      hctx.drawImage(trail, 0, 0);
-      hctx.globalCompositeOperation = 'source-in';
-      hctx.fillStyle = 'rgba(226,194,127,.26)';
-      hctx.fillRect(0, 0, haze.width, haze.height);
-      vctx.globalCompositeOperation = 'lighter';
-      vctx.drawImage(haze, 0, 0, vw, vh);
-      vctx.globalCompositeOperation = 'source-over';
-      vraf = requestAnimationFrame(vframe);
-    };
-    const brush = {
-      wake() { if (!vraf && ready && seen && lastDab && now() - lastDab < 2000) vraf = requestAnimationFrame(vframe); },
-      still() { if (last || next) { clearAll(); lastDab = 0; } },
-      point(x, y) {
-        next = { x, y };
-        lastDab = now();
-        quiet = 0;
-        if (!last) prevT = 0;
-        if (!vraf && ready && seen) vraf = requestAnimationFrame(vframe);
-      }
-    };
-    loops.push(brush);
-
-    const vsize = () => {
-      vdpr = Math.min(devicePixelRatio || 1, 1.5);
-      vw = view.width = Math.round(stage.clientWidth * vdpr);
-      vh = view.height = Math.round(stage.clientHeight * vdpr);
-      trail.width = Math.round(stage.clientWidth * TRAIL);
-      trail.height = Math.round(stage.clientHeight * TRAIL);
-      haze.width = trail.width;
-      haze.height = trail.height;
-      if (!vw || !vh) return;
-      paintUnder();
-      ready = true;
-      if (reduced) paintSplit(); else clearAll();
-    };
-    // Fonts and the three marks first, so the page underneath is drawn once, complete.
-    Promise.all([document.fonts ? document.fonts.ready : null, ...marks.map((m) => (m.img.decode ? m.img.decode().catch(() => {}) : null))]).then(() => {
-      if ('ResizeObserver' in window) new ResizeObserver(vsize).observe(stage); else vsize();
-    });
-
-    // The pointer, read once a frame, in the stage's own pixels.
-    if (fine && !reduced) {
-      let queued = null;
-      hero.addEventListener('pointermove', (e) => {
-        if (e.pointerType === 'touch') return;
-        const first = !queued;
-        queued = e;
-        if (!first) return;
-        requestAnimationFrame(() => {
-          const ev = queued;
-          queued = null;
-          if (now() < scrollingUntil) return;
-          measure();
-          const x = ev.clientX - rect.left;
-          const y = ev.clientY - rect.top;
-          loops.forEach((l) => l.point && l.point(x, y));
-        });
-      }, { passive: true });
-    } else if (!fine && !reduced) {
-      // A finger: one slow wipe across the stage, the first time it is seen once the page has opened.
-      const wipe = () => {
-        let t0 = 0;
-        const run = (t) => {
-          if (!ready) { requestAnimationFrame(run); return; }
-          if (!t0) t0 = t;
-          const p = Math.min(1, (t - t0) / 2600);
-          const W = stage.clientWidth;
-          const H = stage.clientHeight;
-          const e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
-          brush.point(W * (-0.05 + 1.1 * e), H * (0.5 + 0.28 * Math.sin(e * Math.PI * 2.2)));
-          if (p < 1) requestAnimationFrame(run);
-        };
-        requestAnimationFrame(run);
-      };
-      const once = new Site.Observer((entries) => {
-        if (!entries[0].isIntersecting) return;
-        once.disconnect();
-        setTimeout(wipe, 900);
-      });
-      const arm = () => once.observe(stage);
-      if (document.documentElement.classList.contains('intro')) document.addEventListener('sentinel:intro-done', arm, { once: true });
-      else arm();
-    }
-  }
 })();

@@ -37,7 +37,7 @@
     { id: 'password', when: 0, for: ['password', 'code'], text: T.password },
     { id: 'sessions', when: 1, for: ['password', 'code', 'remote'], text: 'In that account\'s security settings, sign out every other device, and remove any recovery email, phone number or mail forwarding you do not recognise.' },
     { id: 'twostep', when: 1, for: ['password', 'code'], text: T.twostep },
-    { id: 'scan', when: 1, for: ['remote', 'file'], text: `${T.scan} Sentinel can check the file they sent too.` },
+    { id: 'scan', when: 1, for: ['remote', 'file'], text: T.scan },
     { id: 'other-device', when: 1, for: ['remote', 'file'], text: T['other-device'] },
     { id: 'identity', when: 1, for: ['identity'], text: 'Ask for a fraud alert or a credit freeze, so nobody can open accounts or borrow in your name. Where to do that is in the reporting list below.' },
     { id: 'statements', when: 1, for: ['card', 'bank', 'identity'], text: 'Read your statements for the last few weeks and the next few months, and report anything you do not recognise.' },

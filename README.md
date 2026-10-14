@@ -1,21 +1,49 @@
-<!-- built-from -->
-> **This repository holds build output.** The site is generated from
-> [zzilinct/Sentinel](https://github.com/zzilinct/Sentinel) (`web/`) by
-> `scripts/publish-site.js`. Edit the source there; changes made here are
-> overwritten on the next publish.
+# Sentinel website — independent development line
 
-# Sentinel website
+This repository is the private, independent website development copy of `wyattbombara/sentinel`. It started from the exact source commit `0e1f862fd55052bd8902d4c06ac0535a4868ca89`. The original repository holds generated build output; **this development line is edited independently**. Do not run the upstream publishing script against this repository or deploy these changes to production without a separate request.
 
-Static product preview. There is currently no API, account service, payment integration or downloadable extension in this repository.
+## Product status
 
-To preview locally, run `python -m http.server 8765 --bind 127.0.0.1` from this directory, then open `http://127.0.0.1:8765/index.html`.
+This is a static HTML/CSS/vanilla JavaScript product preview. No API, account service, checkout, file-upload service, live protection or downloadable installer is connected here. The URL checker runs the bundled address engine locally and fetches only its bundled word list. It does not visit the submitted URL, inspect its page, or query live threat lists. Example search verdicts are saved snapshots.
 
-Run the dependency-free regression checks with `node --test tests/site.test.cjs` (Node 18 or later).
+The pricing cards preserve the original planned monthly prices and allowances: Free $0, Pro $15, Max $40, Ultimate $100. Paid plans are disabled. The download page fails closed in its HTML and script; it does not distribute unverified installers or browser companions.
 
-The original supplied logo is `assets/img/sentinel.png`. Navigation, browser icons, the manifest and every threat illustration use it. `assets/js/masks.js` adds severity cues: a normal yellow shield, angular orange details, and red horns. These variants are shared by the marketing demos, threat cards and dashboard verdicts.
+## Development
 
-`assets/js/config.js` keeps online features disabled until a backend is implemented. See [SERVER-REPORT.md](SERVER-REPORT.md) for the existing API expectations and outstanding work. Keep this disabled until the API is ready; toggling it does not create a backend.
+The site needs no build step or runtime packages. Serve this directory with any static server, for example:
 
-Pricing: Free $0, Pro $15/month, Max $40/month, Ultimate $100/month. Ultimate includes every Max feature, uncapped live scanning hours, 500 researched link scans per week and 500 virus/malware scans per week. These are planned offerings, not enforced subscriptions.
+```sh
+python3 -m http.server 8765 --bind 127.0.0.1
+```
 
-For a future extension release, publish a ZIP in `downloads/`, then set `available`, `version` and a site-relative `download` URL in `downloads/latest.json`. The page only enables downloading after the archive responds successfully and is not an HTML fallback page.
+Open `http://127.0.0.1:8765/index.html`. Use an HTTP server so the local word-list fetch works; do not use `file://` for interaction review.
+
+Styles are in `assets/css/sentinel.css` (component foundations), `interactive.css` (demo behavior), `practice.css` (practice inbox), and `redesign.css` (shared visual system and responsive layouts). Self-hosted Geist and Instrument Serif fonts and existing WebP mask art retain the Sentinel brand. No Blender or new 3D renderer is required.
+
+## Checks
+
+Node 22 is recommended. The dependency-free checks run without installing packages:
+
+```sh
+npm run test:static
+```
+
+For the DOM interaction checks:
+
+```sh
+npm ci
+npm test
+```
+
+These execute the real exported scripts against actual page markup using LinkeDOM. They cover theme cycling (including blocked storage), navigation, pricing recommendations, search tabs/replay/result details, severity controls/cycling, local scan outcomes/errors, the six-round game, the twelve-message inbox, and the recovery checklist. They are **not rendered browser tests**.
+
+For browser review in a supported local/CI environment:
+
+```sh
+npx playwright install --with-deps chromium
+npm run test:browser
+```
+
+The runner starts a loopback-only server, checks all nine pages at 375, 768, 1024, 1440 and landscape 812px in both themes, exercises real browser interactions, checks runtime errors/overflow, and writes screenshots plus a report to ignored `test-results/`. Set `SENTINEL_BASE_URL` to test an already running preview. The private development workflow runs validation only; the inherited GitHub Pages deployment workflow was removed.
+
+See [REDESIGN-REVIEW.md](REDESIGN-REVIEW.md) for changes, validation evidence and remaining review limits.

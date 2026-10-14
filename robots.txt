@@ -1,14 +1,3 @@
-# Sentinel. The public pages are for everyone; account pages and the API are not for indexing.
+# Private, independent development preview. No public indexing is intended.
 User-agent: *
-Allow: /
-Disallow: /app
-Disallow: /api/
-Disallow: /login
-Disallow: /signup
-Disallow: /forgot
-Disallow: /reset
-Disallow: /verify
-Disallow: /connect
-Disallow: /guest
-
-Sitemap: https://wyattbombara.github.io/sentinel/sitemap.xml
+Disallow: /

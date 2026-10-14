@@ -2,12 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://wyattbombara.github.io/sentinel https://api.github.com; object-src 'none'; base-uri 'none'; form-action 'self' https://wyattbombara.github.io/sentinel">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="robots" content="noindex, nofollow">
 <script src="assets/js/static.js"></script>
 <script src="assets/js/boot.js"></script>
-<script src="assets/js/intro.js" defer></script>
-<script src="assets/js/cosmos.js" defer></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0a0b0d" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)">
@@ -19,244 +18,310 @@
 <link rel="preload" href="assets/fonts/instrument-serif-normal-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/sentinel.css">
 <link rel="stylesheet" href="assets/css/interactive.css">
-<link rel="stylesheet" href="assets/css/hover.css">
-<script src="assets/js/hover.js" defer></script>
 <meta property="og:site_name" content="Sentinel">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://wyattbombara.github.io/sentinel/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<link rel="stylesheet" href="assets/css/lux.css">
 <title>Privacy Policy · Sentinel</title>
 <meta name="description" content="Exactly what Sentinel collects, why, how long it keeps it, who else sees it, and what it never does.">
 <meta property="og:url" content="https://wyattbombara.github.io/sentinel/privacy">
 <link rel="canonical" href="https://wyattbombara.github.io/sentinel/privacy">
+<link rel="stylesheet" href="assets/css/redesign.css">
 </head>
 <body class="has-prelaunch">
 <a class="skip-link" href="#main">Skip to content</a>
-<header class="nav" data-nav>
-  <div class="wrap nav__inner">
-    <a class="logo" href="index.html" aria-label="Sentinel home">
-      <span class="logo__mark"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M32 2.6 57.4 10v18.6c0 14.6-9.9 24.6-25.4 31.4C16.5 53.2 6.6 43.2 6.6 28.6V10Zm0 4.2L10.6 13v15.6c0 12.2 8 20.7 21.4 26.8 13.4-6.1 21.4-14.6 21.4-26.8V13Z"/><g transform="translate(32 30.5) scale(.70) translate(-32 -30.5)"><path fill="currentColor" fill-rule="evenodd" d="M32 11.6c-5.6 0-10.4 1.8-12.6 5C18.4 18.1 18 19.9 18 21.8v7.8c0 3.8 1.2 7 3.4 9.8L32 49.4l10.6-10c2.2-2.8 3.4-6 3.4-9.8v-7.8c0-1.9-.4-3.7-1.4-5.2-2.2-3.2-7-5-12.6-5ZM21 23.4l8 3-.5 3.6-7.5-1.8ZM43 23.4l-8 3 .5 3.6 7.5-1.8ZM24.6 32l4.6 1.1v8.4l-3-3.4ZM39.4 32l-4.6 1.1v8.4l3-3.4Z"/><path fill="currentColor" fill-rule="evenodd" d="M42.8 16.2a2.3 2.3 0 1 1 0 4.6 2.3 2.3 0 0 1 0-4.6Z"/></g></svg></span>
+<header class="nav" data-nav><div class="wrap nav__inner">
+<a class="logo" href="index.html" aria-label="Sentinel home">
+      <span class="logo__mark"><svg viewbox="0 0 64 64" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M32 2.6 57.4 10v18.6c0 14.6-9.9 24.6-25.4 31.4C16.5 53.2 6.6 43.2 6.6 28.6V10Zm0 4.2L10.6 13v15.6c0 12.2 8 20.7 21.4 26.8 13.4-6.1 21.4-14.6 21.4-26.8V13Z"></path><g transform="translate(32 30.5) scale(.70) translate(-32 -30.5)"><path fill="currentColor" fill-rule="evenodd" d="M32 11.6c-5.6 0-10.4 1.8-12.6 5C18.4 18.1 18 19.9 18 21.8v7.8c0 3.8 1.2 7 3.4 9.8L32 49.4l10.6-10c2.2-2.8 3.4-6 3.4-9.8v-7.8c0-1.9-.4-3.7-1.4-5.2-2.2-3.2-7-5-12.6-5ZM21 23.4l8 3-.5 3.6-7.5-1.8ZM43 23.4l-8 3 .5 3.6 7.5-1.8ZM24.6 32l4.6 1.1v8.4l-3-3.4ZM39.4 32l-4.6 1.1v8.4l3-3.4Z"></path><path fill="currentColor" fill-rule="evenodd" d="M42.8 16.2a2.3 2.3 0 1 1 0 4.6 2.3 2.3 0 0 1 0-4.6Z"></path></g></svg></span>
       Sentinel
     </a>
-    <nav class="nav__links" aria-label="Main">
-      <a href="index.html#masks" data-spy="masks">The masks</a>
-      <a href="index.html#how" data-spy="how">How it works</a>
-      <a href="index.html#game" data-spy="game">Spot the scam</a>
-      <a href="index.html#try" data-spy="try">Try a link</a>
-      <a href="pricing.html" data-spy="pricing">Pricing</a>
-      <a href="recover.html">Been scammed?</a>
-    </nav>
-    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Change theme">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17Z" fill="currentColor"/></svg>
-      <span data-theme-label>Auto</span>
-    </button>
-    <div class="nav__actions" data-auth-actions>
-      <a class="btn btn--ghost btn--sm is-soon" role="link" aria-disabled="true" title="Not available until launch">Sign in</a>
-      <a class="btn btn--gold btn--sm" href="download.html">Download</a>
-    </div>
-    <button class="nav__toggle" type="button" aria-label="Menu" aria-expanded="false" data-nav-toggle>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg>
-    </button>
-  </div>
-</header>
-
-<main id="main">
-<div class="prelaunch" role="status"><b>Preview.</b> Sentinel hasn&rsquo;t launched yet, so accounts and downloads aren&rsquo;t available here, and Try a link checks addresses in your browser. Everything else is the real product: the verdicts on this page come from Sentinel&rsquo;s own engine.</div>
-  <section class="page-head page-head--privacy" style="padding-bottom:40px">
-    <div class="vframe" aria-hidden="true"><svg viewBox="0 0 74 74"><g fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 66V22C8 14 14 8 22 8h44"/><path d="M15 66V28c0-7 6-13 13-13h38"/><path d="M28 28c-6 0-10 4-10 9 0 4 3 7 6 7 3 0 5-2 5-5 0-2-2-4-4-4"/><path d="M38 8c0 6 4 10 10 10M8 38c6 0 10 4 10 10"/><circle cx="8" cy="8" r="3"/></g></svg><svg viewBox="0 0 74 74"><g fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 66V22C8 14 14 8 22 8h44"/><path d="M15 66V28c0-7 6-13 13-13h38"/><path d="M28 28c-6 0-10 4-10 9 0 4 3 7 6 7 3 0 5-2 5-5 0-2-2-4-4-4"/><path d="M38 8c0 6 4 10 10 10M8 38c6 0 10 4 10 10"/><circle cx="8" cy="8" r="3"/></g></svg><svg viewBox="0 0 74 74"><g fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 66V22C8 14 14 8 22 8h44"/><path d="M15 66V28c0-7 6-13 13-13h38"/><path d="M28 28c-6 0-10 4-10 9 0 4 3 7 6 7 3 0 5-2 5-5 0-2-2-4-4-4"/><path d="M38 8c0 6 4 10 10 10M8 38c6 0 10 4 10 10"/><circle cx="8" cy="8" r="3"/></g></svg><svg viewBox="0 0 74 74"><g fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 66V22C8 14 14 8 22 8h44"/><path d="M15 66V28c0-7 6-13 13-13h38"/><path d="M28 28c-6 0-10 4-10 9 0 4 3 7 6 7 3 0 5-2 5-5 0-2-2-4-4-4"/><path d="M38 8c0 6 4 10 10 10M8 38c6 0 10 4 10 10"/><circle cx="8" cy="8" r="3"/></g></svg></div>
+    <nav class="nav__links" id="primary-navigation" aria-label="Main"><a href="index.html#how">How it works</a><a href="index.html#try">Check a link</a><a href="practice.html">Practice</a><a href="pricing.html">Pricing</a><a href="recover.html">Recovery</a></nav><button class="theme-toggle" type="button" data-theme-toggle aria-label="Change theme"><svg viewbox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.6"></circle><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor"></path></svg><span data-theme-label>Auto</span></button><div class="nav__actions" data-auth-actions><a class="btn btn--gold btn--sm" href="download.html">Get Sentinel <span aria-hidden="true">↗</span></a></div>
+<button class="nav__toggle" type="button" aria-label="Open menu" aria-controls="primary-navigation" aria-expanded="false" data-nav-toggle><svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true" focusable="false"><path d="M4 8h16M4 16h16"></path></svg></button>
+</div></header><main id="main" tabindex="-1">
+<div class="prelaunch">
+<span class="preview-label">Product preview</span><p>Try the local checker and example demos. Accounts, payments and downloads are not available in this preview.</p>
+<a href="download.html">Release status <span aria-hidden="true">→</span></a>
+</div>
+<section class="page-head page-head--privacy" style="padding-bottom:40px">
     <div class="wrap-narrow">
-      <svg class="orn-rule" viewBox="0 0 260 26" aria-hidden="true"><path d="M0 13h100M160 13h100"/><path d="M130 3l10 10-10 10-10-10z"/><path d="M120 13c-6-9-16-9-20 0 4 9 14 9 20 0M140 13c6-9 16-9 20 0-4 9-14 9-20 0"/><circle cx="130" cy="13" r="2"/></svg>
-      <span class="kicker" data-reveal>Privacy Policy</span>
-      <h1 data-split>Exactly what Sentinel sees</h1>
-      <p data-reveal>A protection tool should collect as little as it can and explain the rest. This page describes what the software actually does, not what a template says it should.</p>
-      <p class="updated" data-reveal>Last updated 9 October 2026 &middot; pre-launch draft, not yet reviewed by a lawyer</p>
+      <span class="kicker">Privacy Policy</span>
+      <h1>Exactly what Sentinel sees</h1>
+      <p>A protection tool should collect as little as it can and explain the rest. This page describes what the software actually does, not what a template says it should.</p>
+      <p class="updated">Last updated 9 October 2026 · pre-launch draft, not yet reviewed by a lawyer</p>
     </div>
   </section>
 
   <section class="prose-wrap">
-    <div class="wrap-narrow prose" data-reveal>
-      <h2>1. Two ways to run Sentinel</h2>
+    <nav class="legal-toc" aria-label="On this page"><span>On this page</span><a href="#section-1">1. Two ways to run Sentinel</a><a href="#section-2">2. What is processed when you scan something</a><a href="#section-3">3. What an account stores</a><a href="#section-4">4. Without an account</a><a href="#section-5">5. Cookies and storage in your browser</a><a href="#section-6">6. Who else sees anything</a><a href="#section-7">7. What Sentinel never does</a><a href="#section-8">8. How it is protected</a><a href="#section-9">9. Your choices and rights</a><a href="#section-10">10. Children</a><a href="#section-11">11. Changes</a><a href="#section-12">12. Contact</a></nav><div class="wrap-narrow prose">
+      <h2 id="section-1">1. Two ways to run Sentinel</h2>
       <p>Which of these applies to you changes what this policy means in practice.</p>
       <ul>
-        <li><b>The desktop app.</b> It runs a complete copy of Sentinel on your own computer. Your account, scan history and settings live in a folder on that computer (on Windows, <span class="mono">%APPDATA%\Sentinel</span>) and are not sent to us. The app talks to the internet to download public threat lists and, during research scans, to look up domain records and fetch pages. Nothing about your account leaves the machine.</li>
-        <li><b>The hosted service.</b> When Sentinel is offered from our own servers, the data described below is stored there. The hosted service is not live yet; when it is, this page will say so and name where the servers are.</li>
+        <li>
+<b>The desktop app.</b> It runs a complete copy of Sentinel on your own computer. Your account, scan history and settings live in a folder on that computer (on Windows, <span class="mono">%APPDATA%\Sentinel</span>) and are not sent to us. The app talks to the internet to download public threat lists and, during research scans, to look up domain records and fetch pages. Nothing about your account leaves the machine.</li>
+        <li>
+<b>The hosted service.</b> When Sentinel is offered from our own servers, the data described below is stored there. The hosted service is not live yet; when it is, this page will say so and name where the servers are.</li>
       </ul>
-      <p>The public website is served by GitHub Pages and has no accounts. Its &ldquo;try a link&rdquo; demo and guest mode are described in section 4.</p>
+      <p>The public website is served by GitHub Pages and has no accounts. Its “try a link” demo and guest mode are described in section 4.</p>
 
-      <h2>2. What is processed when you scan something</h2>
+      <h2 id="section-2">2. What is processed when you scan something</h2>
       <ul>
-        <li><b>Web addresses</b> you paste in, and, with live protection on, the addresses of search results and pages you open, and of a link when your pointer rests on it for about half a second (the app and the browser companion then put a small mark beside it). They are checked against threat lists and the checklist.</li>
-        <li><b>Page content</b> of a site, fetched by Sentinel&rsquo;s own servers, only when the scan includes research (Pro, Max and Ultimate). Nothing from your browser session is used: no cookies, no logged-in pages, nothing you typed.</li>
-        <li><b>Email details</b> your mail client already shows you (sender, reply-to, subject, a text excerpt, link addresses and attachment names) when email protection or a paste-in email scan is used. They are analysed in memory and not stored. For a paste-in scan, Sentinel answers with where in the email each warning sign is (positions, not the words), and your browser marks them in the copy it already has. When you paste an email with its headers, or open an .eml file, the app picks out only the four headers that say who really sent it (Authentication-Results, Received-SPF, DKIM-Signature and Return-Path) and sends them with the scan; the other headers, such as the route the email took, stay in your browser. Sentinel reads them in memory, does not store them, and looks nothing up.</li>
-        <li><b>Text messages you paste into the text scan</b> (a text, WhatsApp message or DM, or a whole conversation, and the sender line if you add it). They are checked in memory by the same rules as Check my texts and not stored, not written to your history and not logged; a whole conversation is also read for the steps of a slow scam (a wrong number, a move to another app, a friend far away, an investment, a sudden need for money), in the same way and with nothing kept; links in the message are checked by their address only and never opened.</li>
-        <li><b>Screenshots of text messages</b>, only when you choose one for a text scan in the Windows app. The app reads its text on your computer with the text recognition built into Windows and keeps only the message and the sender line it finds, which you can check before anything is sent; the image is not uploaded, and the copy made for reading is deleted straight away.</li>
-        <li><b>Screenshots of emails</b>, only when you choose one for an email scan in the Windows app. The app reads its text on your computer with the text recognition built into Windows; the image is not uploaded, and the copy made for reading is deleted straight away. The text it finds is then scanned like a pasted email.</li>
-        <li><b>QR codes</b>, only when you paste, drop or choose a picture of one, or hold one up to your camera, on the link scan or email scan. The picture or camera view is read in the app on your device and is not uploaded or kept; only the text the code holds is sent to Sentinel to be checked, like a pasted link. A secret in the code is taken out on your device first and never sent: a two-step sign-in secret, a Wi-Fi password, a sign-in code&rsquo;s token or a wallet connection&rsquo;s key. What is left is enough to say what the code does. The camera is only on while the camera view is open.</li>
-        <li><b>Warn a friend pictures</b>, only when you press Warn a friend under a scan that found a scam. The picture is drawn in the app on your device from the result already on screen, with the link written so it cannot be tapped and without the part of the link after a question mark. It is not uploaded or kept; it goes only where you save, copy or share it.</li>
-        <li><b>Files</b> you upload to the virus and malware scanner are inspected in memory and discarded. Only the file&rsquo;s SHA-256 fingerprint may be kept, so the same file can be recognised again.</li>
-        <li><b>Downloads</b> on your computer are inspected by the desktop app locally. Only the fingerprint is sent to check against known threats; the file itself never leaves your computer.</li>
-        <li><b>Where a download came from.</b> Windows notes the web address each download came from. The desktop app reads that address on your computer, to tell a real installer from a fake one and to check the site with the same quick check it uses for links. The address is not sent to us or kept.</li>
-        <li><b>Programs that arrive on your computer</b>, if defense is on in the Windows app. New program files in Downloads, Desktop, the temporary folder and the Startup folder are inspected on your computer, and the list of programs that start with Windows is read to look for new entries. Only a file&rsquo;s fingerprint is ever sent for a known-threat check. A log of what was scanned, stopped and quarantined is kept on your computer only.</li>
-        <li><b>Tech-support scam shield in the Windows app.</b> On unless you turn it off. While it is on, the app notices when a remote-control program (such as AnyDesk, TeamViewer or Quick Assist) starts, by its program name only, and when someone connects through one that is always running: by the name of the program TeamViewer or ScreenConnect starts for a connection, or, for AnyDesk, by the time its connection log last changed (Sentinel never reads what the log says). It compares that with pages live scanning flagged and file names download protection already lists; nothing about it leaves your computer, and it closes a browser window or a program only when you press its button.</li>
-        <li><b>&ldquo;Did you type anything?&rdquo; after a flagged page.</b> When live scanning in the Windows app or the browser companion warns you about a page, Sentinel also notes whether that page has a password box or a box for a card number. The Windows app asks Windows (through the accessibility interface screen readers use) only whether each box on the page is a password box and what the box is labelled; the companion looks at each box&rsquo;s type and labels in the page, including in frames inside it (such as a payment provider&rsquo;s card form). Nothing you type is ever read. When you close that page, or move on from it to another site, Sentinel asks once whether you typed a password or card number there: Yes opens the recovery guide with that ticked, No closes the question. It is asked once per site, never over a game or a full-screen page, and not about a private window in the companion. Which sites were asked about is held in memory only (in the companion, until the browser closes) and never sent; the log records only that the question was asked, never the site or your answer.</li>
-        <li><b>A pause before paying with gift cards or crypto.</b> When live scanning in the Windows app or the browser companion is on a page that sells gift cards or sends crypto, and something scam-shaped happened in the last hour, a card asks you to stop and think. Such a page is known by its address or, when the address says nothing, by its title: in the Windows app, the title of the browser&rsquo;s window, looked at for words like &ldquo;Buy gift cards&rdquo; or &ldquo;Send Bitcoin&rdquo;. The companion also looks at the page itself, but only in the hour after it warned you about a page, and only on a site that has not had the card yet: at its title and its short headings, buttons and form labels, such as &ldquo;Gift card amount&rdquo; or &ldquo;Recipient address&rdquo;, never at links, footers or anything you type. A site that changes screens without loading a new page, as many web apps and wallets do, is looked at again when it does, by the same rules. That reading happens on your device; only whether the page is a gift card or crypto page goes anywhere, never the words. In the Windows app the signs are a page Sentinel warned you about, a chat warning, a remote-control program the tech-support scam shield noticed, or the call check answering &ldquo;Hang up&rdquo; (only that answer reaches the app, never what you ticked). In the companion the sign is a page it warned you about. Only the kind of sign, its time and the sites the card was shown on are kept, in memory or the browser&rsquo;s session storage, and forgotten when Sentinel or the browser closes. Nothing about it is sent anywhere, and the log says only which kind of page and sign, never the address.</li>
-        <li><b>Live scanning in the Windows app.</b> It is off until you press Start scanning, and it stays on until you press Stop. While it is on, and only while a browser is the window in front, not minimised, with someone at the keyboard, the app asks Windows (through the accessibility interface screen readers use) for three things: the address of the page the browser is showing, where that page sits on your screen, and, on a search results page, the addresses of the links on screen, where they are, and the text each link shows (a result&rsquo;s title, as the search engine displays it). On any other page, when your pointer rests on a link for a moment, the app asks Windows for that one link&rsquo;s address and where it is, so it can put a mark beside it; the address is checked like a result&rsquo;s and is not written to the log. To know a shop&rsquo;s checkout, the app also looks at the title of the browser&rsquo;s window (which Windows shows for every window) for words like &ldquo;Checkout&rdquo;; only whether it found them goes to the check, never the title. At a checkout of a shop whose address is new or not known to Sentinel, a card suggests a safe way to pay. It uses the shop&rsquo;s registration date only if Sentinel already has it; in fast scanning nothing is looked up for it, and in delicate scanning it is part of the registry lookup that scanning already makes. The addresses are checked the same way a pasted link is checked. A result&rsquo;s title and the words you searched for help the check understand what a site is about without opening it: a site whose name only resembles a brand is judged by whether its result claims to be that brand. They are used for that check only, by the copy of Sentinel running on your computer, and are not written to your history or the log. In a private window they are not used at all. The positions are used only to draw Sentinel&rsquo;s gold line, its mask in the corner of the browser and the marks beside results, in a transparent window of Sentinel&rsquo;s own that sits over the page; nothing is added to the page or the browser, and clicks and keys pass straight through. So the marks keep up while you scroll (with a wheel, a touchpad or the scrollbar), the app also looks at a narrow strip of the results page down the left edge of the results, only while a results page with marks is in front: a few times a second, and about 60 times a second while the page is being scrolled. Each row of the strip is reduced at once to a single brightness number, and comparing those numbers with the previous ones says how far the page moved. No image of the strip is kept, saved or sent, and the numbers are thrown away a moment later. Beyond those result titles, Sentinel does not read what a page says, what you type, passwords, cookies or anything behind a login, and it takes no screenshots. It works in Chrome, Edge, Brave, Opera, Vivaldi, DuckDuckGo, Firefox and LibreWolf. A browser that is minimised, behind another program, closed, or left alone for two minutes is not read at all.</li>
-        <li><b>Fast and delicate scanning.</b> Live scanning has two modes, and you choose. <b>Fast</b> checks addresses against the threat lists and Sentinel&rsquo;s own rules, entirely on your computer in the Windows app. <b>Delicate</b> does the same and also asks two public services about each result&rsquo;s domain name: the domain registry that IANA lists for that ending (how long ago the domain was registered) and the DNS (whether it resolves). Those services see the domain name and your internet address, as they would if you looked the domain up yourself. They are not sent the full address, the page, or anything about you or your account. The Windows app never opens a suspicious page from your computer in either mode. Private windows always get the fast checks, so nothing about them is sent to a registry.</li>
-        <li><b>Chat safety in the Windows app (Roblox and Discord).</b> It is off until you, or a parent, turn it on. While it is on, and only while Roblox or the Discord app is the window in front, Sentinel reads the chat messages on screen so it can point out a scam or someone who may not be safe to talk to. In the Discord app it asks Windows (through the accessibility interface screen readers use) for the messages on screen, who wrote them and where they are, and the window's title (the server and channel, or the person in a direct message). In Roblox it reads the chat box with the text recognition built into Windows: the corner of the window where the chat box is, and once a second the middle of the screen to see whether the Esc menu is open, are copied in memory, read, and dropped straight away; it reads nothing while a game's chat is closed. It also reads Roblox's own log file on your computer to know which game is being played, and asks Roblox's public game pages for that game's name and description (by its place number only), so ordinary talk in a game is not mistaken for danger. Messages are judged on your computer, by the app itself, and forgotten: no message, name or game is sent to Sentinel or anyone else, saved, or written to any log. Sentinel never changes Roblox or Discord, never puts code into them or reads their memory, and never types or clicks in them. A Sentinel badge shows while chat is watched (in a Roblox game, only when its Esc menu is open), and a warning appears beside a suspicious message.</li>
-        <li><b>Stop pasted commands in the Windows app.</b> On unless you turn it off. While a browser is open, the app looks at text you copy in any program to spot a command a web page wants you to paste into Windows, and with &ldquo;Check links I copy&rdquo; on, a copied link; this is done on your computer, and a copied command is never sent, saved or logged. A command it stops is held in memory for two minutes, so you can put it back, then dropped. To tell a copy made in a browser from one made in another program, the app notes which program&rsquo;s window is in front; only that program's name is used, and it is not kept. The browser companion does the same check, inside the browser, on what a page tries to copy and on what you copy yourself; it is on unless you turn off &ldquo;Stop pasted commands&rdquo; in its settings, and nothing it checks is sent or kept.</li>
-        <li><b>Wallet guard in the Windows app.</b> On unless you turn it off. Each time the clipboard changes, the app looks at the text on it to notice a crypto wallet address or a bank account number (IBAN); any other text is dropped straight away and never kept. If the address you copied changes to a different one by itself straight after, with no key or mouse button pressed in between, it puts yours back and tells you. To tell that apart from a second copy of your own, it asks Windows only which program last changed the clipboard and how long ago a key or the mouse was used; it never sees which keys. Addresses are compared on your computer, in memory, and are never sent, saved or logged. The log records only that a swap was caught, the kind of address and the program&rsquo;s name.</li>
-        <li><b>Parent lock in the Windows app.</b> If you set a PIN, only a salted hash of it is kept, on your computer, with a record of when protection was switched off or Sentinel stopped (times and switch names only, with a count when the same thing happens again within the hour); to tell Sentinel being ended from a Windows shutdown, it looks in Windows&rsquo; own system log for shutdown entries, and nothing of this leaves your computer.</li>
-        <li><b>Browser checkup in the Windows app.</b> Only when you run it, the app reads your browsers&rsquo; settings files on your computer for their add-ons, the sites allowed to send you notifications, and the search engine and start pages, never history, passwords or cookies, changes nothing, and checks those site addresses like a private window&rsquo;s, so they are not added to your history. It reads Chrome, Edge, Brave, Opera, Opera GX, Vivaldi, Firefox and LibreWolf, and for Firefox also its list of profiles, so profiles you no longer use are left out. These checks do not use your live scanning minutes.</li>
-        <li><b>Scan with Sentinel in the right-click menu.</b> The Windows app adds this to the menu you get when you right-click a file (under Show more options on Windows 11), for your Windows account only. A file is read only when you choose it there: it goes to the Virus &amp; malware scan, which checks it on your computer like a file you drop in yourself. When you are not signed in, Sentinel checks it with the scanner built into the app instead and shows the answer in a small window: nothing about the file leaves your computer, and it is not compared with Sentinel's list of known threats unless you then choose to sign in. The log records only that a file was handed over and the answer, not its name or folder. You can take it out of the menu in Live protection, and uninstalling Sentinel removes it.</li>
-        <li><b>Check something on screen in the Windows app.</b> Nothing is read until you press its shortcut or choose it in the tray menu. Then the app copies the screen once, in memory, and you draw a box; only what is inside the box is read, on your computer: its words by the text recognition built into Windows, and a QR code in it by Sentinel&rsquo;s own reader. The words are judged on your computer by the same rules as Check my texts. Only the addresses of links found in the box are checked against the threat lists, never opened, not added to your history and not counted as live-scanning time. The picture and the words are never sent, saved or logged, and the copy of the screen is dropped as soon as the box is read or you press Escape. The log records only that a check happened, its result and how many links it had. You can turn it off in Live protection.</li>
-        <li><b>Check my texts in the Windows app.</b> Off until you turn it on. While it is on, and only while Phone Link is the window in front with its Messages tab open, Sentinel reads the open conversation on screen (who it is with and the texts you received, through the accessibility interface screen readers use, or with the text recognition built into Windows when that cannot be read, keeping no image) and judges each text on your computer; only the addresses of links in a text are checked against the threat lists, never opened, not added to your history and not counted as live-scanning time, and no text, name or number is sent, saved or logged.</li>
-        <li><b>Webmail inboxes.</b> When Gmail or Outlook on the web is the page in front and live scanning is on (Pro and up), the Windows app reads the message rows your inbox is showing on screen, as the inbox displays them: sender name, subject and the short preview. Each row is checked for signs of a scam and gets a mark beside it before you open the message. Sentinel does not open, click, move or mark any message, does not read a message you have not scrolled to, and keeps none of this: the rows are checked and discarded, and are not written to your history or to a log.</li>
-        <li><b>Private windows.</b> InPrivate, Incognito and Private Browsing windows are protected in the same way, so a dangerous page still gets a warning. Nothing about them is kept: no entry in your scan history even when a result is flagged, no line in the app&rsquo;s local log, no entry in the app&rsquo;s live list, and the address is not held in memory after the check. Sentinel recognises a private window by the words the browser puts in its title; if your browser uses wording Sentinel does not know, the window is treated as an ordinary one, so say so and we will add it.</li>
-        <li><b>What live scanning keeps for ordinary windows.</b> On your computer only: a short rolling log of checked addresses (<span class="mono">logs\watch.log</span>, emptied when it passes half a megabyte) and the live list in the app, which holds the last few pages until the app is closed. Flagged search results are added to your scan history, like any flagged scan.</li>
-        <li><b>Exposure alerts in the Windows app.</b> Off until you turn them on. While on, each page live scanning finds safe in an ordinary window is remembered for 14 days as a scrambled code of its site name and the day you visited it (your own calendar day, worked out from your computer&rsquo;s time zone), never the address or the time, so Sentinel can tell you if a threat list names that site, or a page on it, later. They are kept by the Sentinel server the app uses: its own, on your computer, unless you set the app to use another one. When only one page of a site is listed, Sentinel counts it for that site only if the site was registered less than a year ago or its age is not known; it judges that from what it already knows and asks no one. An alert names the listed site in plain words and is kept 30 days unless you dismiss it. Turning exposure alerts off erases every remembered site and every alert; if that cannot be done at once, the app tries again each time it starts until it is done. The copies Sentinel keeps to repair its accounts file can still hold them for up to 7 days.</li>
-        <li><b>Your sites in the Windows app.</b> On unless you turn it off, and only when the app uses its own scanner on your computer. To warn you about addresses made to look like the sites you really use (your bank or credit union, your school, your work sign-in), Sentinel learns those sites from live scanning: each day a page in an ordinary window is found safe, a scrambled code of its site name counts that day, never the address or the time. A site seen on three different days within about a month is then kept as its plain site name (for example <span class="mono">mycu.org</span>), and so is any site you add yourself; you can read and remove each one under Your sites in Live protection. Big brands Sentinel already knows, pages on shared sites and private windows are never learned. Every link, page and email Sentinel checks for you is compared with your list on your computer, and nothing about the list is sent anywhere. Forget all erases every site and every count; turning Your sites off does the same, and if that cannot be done at once, the app tries again each time it starts. The copies Sentinel keeps to repair its accounts file can still hold them for up to 7 days.</li>
-        <li><b>Your week with Sentinel.</b> To show what Sentinel did for you each week, it adds to a few counters: links live scanning checked, dangerous pages and results it flagged, and look-alikes of your sites it caught. The Windows app also counts, on your computer, the files it checked and quarantined, copied commands it stopped, wallet swaps it caught and chat messages it checked and flagged, and hands those numbers to its own scanner on your computer every few minutes. Each counter is a number for the week and nothing else: never a link, a file name, a command, a wallet address or a message. Private browser windows are not counted. The weekly Windows notification about your week is off until you turn it on.</li>
+        <li>
+<b>Web addresses</b> you paste in, and, with live protection on, the addresses of search results and pages you open, and of a link when your pointer rests on it for about half a second (the app and the browser companion then put a small mark beside it). They are checked against threat lists and the checklist.</li>
+        <li>
+<b>Page content</b> of a site, fetched by Sentinel’s own servers, only when the scan includes research (Pro, Max and Ultimate). Nothing from your browser session is used: no cookies, no logged-in pages, nothing you typed.</li>
+        <li>
+<b>Email details</b> your mail client already shows you (sender, reply-to, subject, a text excerpt, link addresses and attachment names) when email protection or a paste-in email scan is used. They are analysed in memory and not stored. For a paste-in scan, Sentinel answers with where in the email each warning sign is (positions, not the words), and your browser marks them in the copy it already has. When you paste an email with its headers, or open an .eml file, the app picks out only the four headers that say who really sent it (Authentication-Results, Received-SPF, DKIM-Signature and Return-Path) and sends them with the scan; the other headers, such as the route the email took, stay in your browser. Sentinel reads them in memory, does not store them, and looks nothing up.</li>
+        <li>
+<b>Text messages you paste into the text scan</b> (a text, WhatsApp message or DM, or a whole conversation, and the sender line if you add it). They are checked in memory by the same rules as Check my texts and not stored, not written to your history and not logged; a whole conversation is also read for the steps of a slow scam (a wrong number, a move to another app, a friend far away, an investment, a sudden need for money), in the same way and with nothing kept; links in the message are checked by their address only and never opened.</li>
+        <li>
+<b>Screenshots of text messages</b>, only when you choose one for a text scan in the Windows app. The app reads its text on your computer with the text recognition built into Windows and keeps only the message and the sender line it finds, which you can check before anything is sent; the image is not uploaded, and the copy made for reading is deleted straight away.</li>
+        <li>
+<b>Screenshots of emails</b>, only when you choose one for an email scan in the Windows app. The app reads its text on your computer with the text recognition built into Windows; the image is not uploaded, and the copy made for reading is deleted straight away. The text it finds is then scanned like a pasted email.</li>
+        <li>
+<b>QR codes</b>, only when you paste, drop or choose a picture of one, or hold one up to your camera, on the link scan or email scan. The picture or camera view is read in the app on your device and is not uploaded or kept; only the text the code holds is sent to Sentinel to be checked, like a pasted link. A secret in the code is taken out on your device first and never sent: a two-step sign-in secret, a Wi-Fi password, a sign-in code’s token or a wallet connection’s key. What is left is enough to say what the code does. The camera is only on while the camera view is open.</li>
+        <li>
+<b>Warn a friend pictures</b>, only when you press Warn a friend under a scan that found a scam. The picture is drawn in the app on your device from the result already on screen, with the link written so it cannot be tapped and without the part of the link after a question mark. It is not uploaded or kept; it goes only where you save, copy or share it.</li>
+        <li>
+<b>Files</b> you upload to the virus and malware scanner are inspected in memory and discarded. Only the file’s SHA-256 fingerprint may be kept, so the same file can be recognised again.</li>
+        <li>
+<b>Downloads</b> on your computer are inspected by the desktop app locally. Only the fingerprint is sent to check against known threats; the file itself never leaves your computer.</li>
+        <li>
+<b>Where a download came from.</b> Windows notes the web address each download came from. The desktop app reads that address on your computer, to tell a real installer from a fake one and to check the site with the same quick check it uses for links. The address is not sent to us or kept.</li>
+        <li>
+<b>Programs that arrive on your computer</b>, if defense is on in the Windows app. New program files in Downloads, Desktop, the temporary folder and the Startup folder are inspected on your computer, and the list of programs that start with Windows is read to look for new entries. Only a file’s fingerprint is ever sent for a known-threat check. A log of what was scanned, stopped and quarantined is kept on your computer only.</li>
+        <li>
+<b>Tech-support scam shield in the Windows app.</b> On unless you turn it off. While it is on, the app notices when a remote-control program (such as AnyDesk, TeamViewer or Quick Assist) starts, by its program name only, and when someone connects through one that is always running: by the name of the program TeamViewer or ScreenConnect starts for a connection, or, for AnyDesk, by the time its connection log last changed (Sentinel never reads what the log says). It compares that with pages live scanning flagged and file names download protection already lists; nothing about it leaves your computer, and it closes a browser window or a program only when you press its button.</li>
+        <li>
+<b>“Did you type anything?” after a flagged page.</b> When live scanning in the Windows app or the browser companion warns you about a page, Sentinel also notes whether that page has a password box or a box for a card number. The Windows app asks Windows (through the accessibility interface screen readers use) only whether each box on the page is a password box and what the box is labelled; the companion looks at each box’s type and labels in the page, including in frames inside it (such as a payment provider’s card form). Nothing you type is ever read. When you close that page, or move on from it to another site, Sentinel asks once whether you typed a password or card number there: Yes opens the recovery guide with that ticked, No closes the question. It is asked once per site, never over a game or a full-screen page, and not about a private window in the companion. Which sites were asked about is held in memory only (in the companion, until the browser closes) and never sent; the log records only that the question was asked, never the site or your answer.</li>
+        <li>
+<b>A pause before paying with gift cards or crypto.</b> When live scanning in the Windows app or the browser companion is on a page that sells gift cards or sends crypto, and something scam-shaped happened in the last hour, a card asks you to stop and think. Such a page is known by its address or, when the address says nothing, by its title: in the Windows app, the title of the browser’s window, looked at for words like “Buy gift cards” or “Send Bitcoin”. The companion also looks at the page itself, but only in the hour after it warned you about a page, and only on a site that has not had the card yet: at its title and its short headings, buttons and form labels, such as “Gift card amount” or “Recipient address”, never at links, footers or anything you type. A site that changes screens without loading a new page, as many web apps and wallets do, is looked at again when it does, by the same rules. That reading happens on your device; only whether the page is a gift card or crypto page goes anywhere, never the words. In the Windows app the signs are a page Sentinel warned you about, a chat warning, a remote-control program the tech-support scam shield noticed, or the call check answering “Hang up” (only that answer reaches the app, never what you ticked). In the companion the sign is a page it warned you about. Only the kind of sign, its time and the sites the card was shown on are kept, in memory or the browser’s session storage, and forgotten when Sentinel or the browser closes. Nothing about it is sent anywhere, and the log says only which kind of page and sign, never the address.</li>
+        <li>
+<b>Live scanning in the Windows app.</b> It is off until you press Start scanning, and it stays on until you press Stop. While it is on, and only while a browser is the window in front, not minimised, with someone at the keyboard, the app asks Windows (through the accessibility interface screen readers use) for three things: the address of the page the browser is showing, where that page sits on your screen, and, on a search results page, the addresses of the links on screen, where they are, and the text each link shows (a result’s title, as the search engine displays it). On any other page, when your pointer rests on a link for a moment, the app asks Windows for that one link’s address and where it is, so it can put a mark beside it; the address is checked like a result’s and is not written to the log. To know a shop’s checkout, the app also looks at the title of the browser’s window (which Windows shows for every window) for words like “Checkout”; only whether it found them goes to the check, never the title. At a checkout of a shop whose address is new or not known to Sentinel, a card suggests a safe way to pay. It uses the shop’s registration date only if Sentinel already has it; in fast scanning nothing is looked up for it, and in delicate scanning it is part of the registry lookup that scanning already makes. The addresses are checked the same way a pasted link is checked. A result’s title and the words you searched for help the check understand what a site is about without opening it: a site whose name only resembles a brand is judged by whether its result claims to be that brand. They are used for that check only, by the copy of Sentinel running on your computer, and are not written to your history or the log. In a private window they are not used at all. The positions are used only to draw Sentinel’s gold line, its mask in the corner of the browser and the marks beside results, in a transparent window of Sentinel’s own that sits over the page; nothing is added to the page or the browser, and clicks and keys pass straight through. So the marks keep up while you scroll (with a wheel, a touchpad or the scrollbar), the app also looks at a narrow strip of the results page down the left edge of the results, only while a results page with marks is in front: a few times a second, and about 60 times a second while the page is being scrolled. Each row of the strip is reduced at once to a single brightness number, and comparing those numbers with the previous ones says how far the page moved. No image of the strip is kept, saved or sent, and the numbers are thrown away a moment later. Beyond those result titles, Sentinel does not read what a page says, what you type, passwords, cookies or anything behind a login, and it takes no screenshots. It works in Chrome, Edge, Brave, Opera, Vivaldi, DuckDuckGo, Firefox and LibreWolf. A browser that is minimised, behind another program, closed, or left alone for two minutes is not read at all.</li>
+        <li>
+<b>Fast and delicate scanning.</b> Live scanning has two modes, and you choose. <b>Fast</b> checks addresses against the threat lists and Sentinel’s own rules, entirely on your computer in the Windows app. <b>Delicate</b> does the same and also asks two public services about each result’s domain name: the domain registry that IANA lists for that ending (how long ago the domain was registered) and the DNS (whether it resolves). Those services see the domain name and your internet address, as they would if you looked the domain up yourself. They are not sent the full address, the page, or anything about you or your account. The Windows app never opens a suspicious page from your computer in either mode. Private windows always get the fast checks, so nothing about them is sent to a registry.</li>
+        <li>
+<b>Chat safety in the Windows app (Roblox and Discord).</b> It is off until you, or a parent, turn it on. While it is on, and only while Roblox or the Discord app is the window in front, Sentinel reads the chat messages on screen so it can point out a scam or someone who may not be safe to talk to. In the Discord app it asks Windows (through the accessibility interface screen readers use) for the messages on screen, who wrote them and where they are, and the window's title (the server and channel, or the person in a direct message). In Roblox it reads the chat box with the text recognition built into Windows: the corner of the window where the chat box is, and once a second the middle of the screen to see whether the Esc menu is open, are copied in memory, read, and dropped straight away; it reads nothing while a game's chat is closed. It also reads Roblox's own log file on your computer to know which game is being played, and asks Roblox's public game pages for that game's name and description (by its place number only), so ordinary talk in a game is not mistaken for danger. Messages are judged on your computer, by the app itself, and forgotten: no message, name or game is sent to Sentinel or anyone else, saved, or written to any log. Sentinel never changes Roblox or Discord, never puts code into them or reads their memory, and never types or clicks in them. A Sentinel badge shows while chat is watched (in a Roblox game, only when its Esc menu is open), and a warning appears beside a suspicious message.</li>
+        <li>
+<b>Stop pasted commands in the Windows app.</b> On unless you turn it off. While a browser is open, the app looks at text you copy in any program to spot a command a web page wants you to paste into Windows, and with “Check links I copy” on, a copied link; this is done on your computer, and a copied command is never sent, saved or logged. A command it stops is held in memory for two minutes, so you can put it back, then dropped. To tell a copy made in a browser from one made in another program, the app notes which program’s window is in front; only that program's name is used, and it is not kept. The browser companion does the same check, inside the browser, on what a page tries to copy and on what you copy yourself; it is on unless you turn off “Stop pasted commands” in its settings, and nothing it checks is sent or kept.</li>
+        <li>
+<b>Wallet guard in the Windows app.</b> On unless you turn it off. Each time the clipboard changes, the app looks at the text on it to notice a crypto wallet address or a bank account number (IBAN); any other text is dropped straight away and never kept. If the address you copied changes to a different one by itself straight after, with no key or mouse button pressed in between, it puts yours back and tells you. To tell that apart from a second copy of your own, it asks Windows only which program last changed the clipboard and how long ago a key or the mouse was used; it never sees which keys. Addresses are compared on your computer, in memory, and are never sent, saved or logged. The log records only that a swap was caught, the kind of address and the program’s name.</li>
+        <li>
+<b>Parent lock in the Windows app.</b> If you set a PIN, only a salted hash of it is kept, on your computer, with a record of when protection was switched off or Sentinel stopped (times and switch names only, with a count when the same thing happens again within the hour); to tell Sentinel being ended from a Windows shutdown, it looks in Windows’ own system log for shutdown entries, and nothing of this leaves your computer.</li>
+        <li>
+<b>Browser checkup in the Windows app.</b> Only when you run it, the app reads your browsers’ settings files on your computer for their add-ons, the sites allowed to send you notifications, and the search engine and start pages, never history, passwords or cookies, changes nothing, and checks those site addresses like a private window’s, so they are not added to your history. It reads Chrome, Edge, Brave, Opera, Opera GX, Vivaldi, Firefox and LibreWolf, and for Firefox also its list of profiles, so profiles you no longer use are left out. These checks do not use your live scanning minutes.</li>
+        <li>
+<b>Scan with Sentinel in the right-click menu.</b> The Windows app adds this to the menu you get when you right-click a file (under Show more options on Windows 11), for your Windows account only. A file is read only when you choose it there: it goes to the Virus &amp; malware scan, which checks it on your computer like a file you drop in yourself. When you are not signed in, Sentinel checks it with the scanner built into the app instead and shows the answer in a small window: nothing about the file leaves your computer, and it is not compared with Sentinel's list of known threats unless you then choose to sign in. The log records only that a file was handed over and the answer, not its name or folder. You can take it out of the menu in Live protection, and uninstalling Sentinel removes it.</li>
+        <li>
+<b>Check something on screen in the Windows app.</b> Nothing is read until you press its shortcut or choose it in the tray menu. Then the app copies the screen once, in memory, and you draw a box; only what is inside the box is read, on your computer: its words by the text recognition built into Windows, and a QR code in it by Sentinel’s own reader. The words are judged on your computer by the same rules as Check my texts. Only the addresses of links found in the box are checked against the threat lists, never opened, not added to your history and not counted as live-scanning time. The picture and the words are never sent, saved or logged, and the copy of the screen is dropped as soon as the box is read or you press Escape. The log records only that a check happened, its result and how many links it had. You can turn it off in Live protection.</li>
+        <li>
+<b>Check my texts in the Windows app.</b> Off until you turn it on. While it is on, and only while Phone Link is the window in front with its Messages tab open, Sentinel reads the open conversation on screen (who it is with and the texts you received, through the accessibility interface screen readers use, or with the text recognition built into Windows when that cannot be read, keeping no image) and judges each text on your computer; only the addresses of links in a text are checked against the threat lists, never opened, not added to your history and not counted as live-scanning time, and no text, name or number is sent, saved or logged.</li>
+        <li>
+<b>Webmail inboxes.</b> When Gmail or Outlook on the web is the page in front and live scanning is on (Pro and up), the Windows app reads the message rows your inbox is showing on screen, as the inbox displays them: sender name, subject and the short preview. Each row is checked for signs of a scam and gets a mark beside it before you open the message. Sentinel does not open, click, move or mark any message, does not read a message you have not scrolled to, and keeps none of this: the rows are checked and discarded, and are not written to your history or to a log.</li>
+        <li>
+<b>Private windows.</b> InPrivate, Incognito and Private Browsing windows are protected in the same way, so a dangerous page still gets a warning. Nothing about them is kept: no entry in your scan history even when a result is flagged, no line in the app’s local log, no entry in the app’s live list, and the address is not held in memory after the check. Sentinel recognises a private window by the words the browser puts in its title; if your browser uses wording Sentinel does not know, the window is treated as an ordinary one, so say so and we will add it.</li>
+        <li>
+<b>What live scanning keeps for ordinary windows.</b> On your computer only: a short rolling log of checked addresses (<span class="mono">logs\watch.log</span>, emptied when it passes half a megabyte) and the live list in the app, which holds the last few pages until the app is closed. Flagged search results are added to your scan history, like any flagged scan.</li>
+        <li>
+<b>Exposure alerts in the Windows app.</b> Off until you turn them on. While on, each page live scanning finds safe in an ordinary window is remembered for 14 days as a scrambled code of its site name and the day you visited it (your own calendar day, worked out from your computer’s time zone), never the address or the time, so Sentinel can tell you if a threat list names that site, or a page on it, later. They are kept by the Sentinel server the app uses: its own, on your computer, unless you set the app to use another one. When only one page of a site is listed, Sentinel counts it for that site only if the site was registered less than a year ago or its age is not known; it judges that from what it already knows and asks no one. An alert names the listed site in plain words and is kept 30 days unless you dismiss it. Turning exposure alerts off erases every remembered site and every alert; if that cannot be done at once, the app tries again each time it starts until it is done. The copies Sentinel keeps to repair its accounts file can still hold them for up to 7 days.</li>
+        <li>
+<b>Your sites in the Windows app.</b> On unless you turn it off, and only when the app uses its own scanner on your computer. To warn you about addresses made to look like the sites you really use (your bank or credit union, your school, your work sign-in), Sentinel learns those sites from live scanning: each day a page in an ordinary window is found safe, a scrambled code of its site name counts that day, never the address or the time. A site seen on three different days within about a month is then kept as its plain site name (for example <span class="mono">mycu.org</span>), and so is any site you add yourself; you can read and remove each one under Your sites in Live protection. Big brands Sentinel already knows, pages on shared sites and private windows are never learned. Every link, page and email Sentinel checks for you is compared with your list on your computer, and nothing about the list is sent anywhere. Forget all erases every site and every count; turning Your sites off does the same, and if that cannot be done at once, the app tries again each time it starts. The copies Sentinel keeps to repair its accounts file can still hold them for up to 7 days.</li>
+        <li>
+<b>Your week with Sentinel.</b> To show what Sentinel did for you each week, it adds to a few counters: links live scanning checked, dangerous pages and results it flagged, and look-alikes of your sites it caught. The Windows app also counts, on your computer, the files it checked and quarantined, copied commands it stopped, wallet swaps it caught and chat messages it checked and flagged, and hands those numbers to its own scanner on your computer every few minutes. Each counter is a number for the week and nothing else: never a link, a file name, a command, a wallet address or a message. Private browser windows are not counted. The weekly Windows notification about your week is off until you turn it on.</li>
       </ul>
 
-      <h2>3. What an account stores</h2>
+      <h2 id="section-3">3. What an account stores</h2>
       <table class="data-table">
-        <thead><tr><th>What</th><th>Why</th><th>Kept for</th></tr></thead>
+        <thead><tr>
+<th scope="col">What</th>
+<th scope="col">Why</th>
+<th scope="col">Kept for</th>
+</tr></thead>
         <tbody>
-          <tr><td>Email address, first name, optional last name</td><td>To identify you, sign you in and contact you about your account</td><td>Until you delete the account</td></tr>
-          <tr><td>Password, stored as a scrypt hash (never the password itself)</td><td>Sign-in</td><td>Until changed or the account is deleted</td></tr>
-          <tr><td>The date you confirmed you are 18+ and accepted the Terms, and which version</td><td>Required to use Sentinel; kept as a record of consent</td><td>Until you delete the account</td></tr>
-          <tr><td>Whether your email is confirmed, and one-time confirmation and reset links (stored hashed)</td><td>Account recovery and security</td><td>Links expire within 24 hours; used links are removed after a day</td></tr>
-          <tr><td>Plan and weekly usage counters</td><td>To apply your plan&rsquo;s allowances</td><td>35 days</td></tr>
-          <tr><td>Weekly counts for Your week: numbers only, such as links checked or files quarantined</td><td>So you can see what Sentinel did for you, week by week</td><td>35 days</td></tr>
-          <tr><td>Scan history: what was checked, when, and the result</td><td>So you can see and re-run past scans</td><td>90 days</td></tr>
-          <tr><td>Sites you have trusted or blocked</td><td>To honour your rules on future scans</td><td>Until you remove them or delete the account</td></tr>
-          <tr><td>Reports you file: the site, your category and any note</td><td>To confirm threats for everyone when enough people agree</td><td>Linked to you until you delete the account. After that the report stays, with no link to you, so a confirmed threat stays confirmed for everyone</td></tr>
-          <tr><td>Signed-in devices: browser name, IP address, last activity</td><td>So you can see and revoke sessions</td><td>Until the session ends or expires (30 days)</td></tr>
-          <tr><td>Security log: sign-ins, password and 2FA changes, reports, plan changes, with IP address</td><td>To investigate misuse and unauthorised access</td><td>180 days</td></tr>
-          <tr><td>Two-factor secret, encrypted</td><td>Two-factor sign-in, if you turn it on</td><td>Until you turn it off</td></tr>
-          <tr><td>API keys for optional AI assistants, encrypted with AES-256-GCM</td><td>To send your messages to the provider you chose</td><td>Until you disconnect the assistant</td></tr>
+          <tr>
+<td data-label="What">Email address, first name, optional last name</td>
+<td data-label="Why">To identify you, sign you in and contact you about your account</td>
+<td data-label="Kept for">Until you delete the account</td>
+</tr>
+          <tr>
+<td data-label="What">Password, stored as a scrypt hash (never the password itself)</td>
+<td data-label="Why">Sign-in</td>
+<td data-label="Kept for">Until changed or the account is deleted</td>
+</tr>
+          <tr>
+<td data-label="What">The date you confirmed you are 18+ and accepted the Terms, and which version</td>
+<td data-label="Why">Required to use Sentinel; kept as a record of consent</td>
+<td data-label="Kept for">Until you delete the account</td>
+</tr>
+          <tr>
+<td data-label="What">Whether your email is confirmed, and one-time confirmation and reset links (stored hashed)</td>
+<td data-label="Why">Account recovery and security</td>
+<td data-label="Kept for">Links expire within 24 hours; used links are removed after a day</td>
+</tr>
+          <tr>
+<td data-label="What">Plan and weekly usage counters</td>
+<td data-label="Why">To apply your plan’s allowances</td>
+<td data-label="Kept for">35 days</td>
+</tr>
+          <tr>
+<td data-label="What">Weekly counts for Your week: numbers only, such as links checked or files quarantined</td>
+<td data-label="Why">So you can see what Sentinel did for you, week by week</td>
+<td data-label="Kept for">35 days</td>
+</tr>
+          <tr>
+<td data-label="What">Scan history: what was checked, when, and the result</td>
+<td data-label="Why">So you can see and re-run past scans</td>
+<td data-label="Kept for">90 days</td>
+</tr>
+          <tr>
+<td data-label="What">Sites you have trusted or blocked</td>
+<td data-label="Why">To honour your rules on future scans</td>
+<td data-label="Kept for">Until you remove them or delete the account</td>
+</tr>
+          <tr>
+<td data-label="What">Reports you file: the site, your category and any note</td>
+<td data-label="Why">To confirm threats for everyone when enough people agree</td>
+<td data-label="Kept for">Linked to you until you delete the account. After that the report stays, with no link to you, so a confirmed threat stays confirmed for everyone</td>
+</tr>
+          <tr>
+<td data-label="What">Signed-in devices: browser name, IP address, last activity</td>
+<td data-label="Why">So you can see and revoke sessions</td>
+<td data-label="Kept for">Until the session ends or expires (30 days)</td>
+</tr>
+          <tr>
+<td data-label="What">Security log: sign-ins, password and 2FA changes, reports, plan changes, with IP address</td>
+<td data-label="Why">To investigate misuse and unauthorised access</td>
+<td data-label="Kept for">180 days</td>
+</tr>
+          <tr>
+<td data-label="What">Two-factor secret, encrypted</td>
+<td data-label="Why">Two-factor sign-in, if you turn it on</td>
+<td data-label="Kept for">Until you turn it off</td>
+</tr>
+          <tr>
+<td data-label="What">API keys for optional AI assistants, encrypted with AES-256-GCM</td>
+<td data-label="Why">To send your messages to the provider you chose</td>
+<td data-label="Kept for">Until you disconnect the assistant</td>
+</tr>
         </tbody>
       </table>
 
-      <h2>4. Without an account</h2>
+      <h2 id="section-4">4. Without an account</h2>
       <ul>
-        <li><b>Guest mode</b> lets you scan ten links a day per connection. Sentinel uses your IP address, in memory only, to count those ten. Nothing about a guest scan is written to disk or kept after the result is shown.</li>
-        <li><b>The website&rsquo;s demo</b> shows example verdicts that were computed when the site was built.</li>
-        <li><b>Trying a link on the website</b> works one of two ways. Where the website runs with Sentinel&rsquo;s server, the link is sent to it and checked, five a day per connection, counted the same way as guest mode, in memory only. On the public website, which has no server, the link is checked in your browser and is not sent anywhere, and there is no daily limit; the browser only fetches Sentinel&rsquo;s checker and its word list from the same site.</li>
+        <li>
+<b>Guest mode</b> lets you scan ten links a day per connection. Sentinel uses your IP address, in memory only, to count those ten. Nothing about a guest scan is written to disk or kept after the result is shown.</li>
+        <li>
+<b>The website’s demo</b> shows example verdicts that were computed when the site was built.</li>
+        <li>
+<b>Trying a link on the website</b> works one of two ways. Where the website runs with Sentinel’s server, the link is sent to it and checked, five a day per connection, counted the same way as guest mode, in memory only. On the public website, which has no server, the link is checked in your browser and is not sent anywhere, and there is no daily limit; the browser only fetches Sentinel’s checker and its word list from the same site.</li>
       </ul>
 
-      <h2>5. Cookies and storage in your browser</h2>
+      <h2 id="section-5">5. Cookies and storage in your browser</h2>
       <ul>
         <li>One cookie, <span class="mono">sentinel_session</span>, keeps you signed in for 30 days. It is HttpOnly and SameSite, so scripts and other sites cannot read it. There are no advertising or analytics cookies, and no cookie banner because none is needed.</li>
-        <li>A few small settings are kept in your browser&rsquo;s local storage, never sent anywhere: <span class="mono">sentinel:theme</span> remembers whether you chose the light or dark theme, and <span class="mono">sentinel:stay</span> remembers whether you asked to stay signed in on this browser. While you fill in the sign-up or password-reset form, what you have typed (never a password) is kept for that browser tab only, so the back button does not lose it; it is gone when the tab closes or the form is sent. On the recovery guide, on the website or in the app, what you tick and which steps you have done are kept in <span class="mono">sentinel:recover</span> in this browser only, never sent anywhere, and Start over clears them. A link to the guide from a warning can tick what the warning was about, through the page&rsquo;s address (for example <span class="mono">?happened=password</span>); nothing else is added to it. On &ldquo;Is this call a scam?&rdquo;, the answer is worked out in your browser from what you tick; nothing you tick is sent anywhere or kept, and it is gone when you leave the page. In the Windows app, <span class="mono">sentinel:asked:chat</span> and <span class="mono">sentinel:asked:exposure</span> remember that you answered the &ldquo;New in Sentinel&rdquo; card for chat safety or exposure alerts, so it is not shown again.</li>
-        <li>The web app may register a service worker that caches Sentinel&rsquo;s own fonts and scripts so pages load faster. It stores nothing about you.</li>
-        <li>The browser companion keeps its settings, your pairing token and a short-lived cache of recent verdicts in the browser&rsquo;s extension storage on your computer.</li>
-        <li>If you turn on the companion&rsquo;s password alarm, it reads the password you type when you sign in to an account you chose to protect and keeps only a salted, scrambled form of it (a PBKDF2 hash) and its length on your computer, for the last three different passwords you signed in with, never the password itself, and nothing about it is sent anywhere. On other sites, a password you type is turned into the same kind of hash, on your computer, only to compare it, then dropped.</li>
+        <li>A few small settings are kept in your browser’s local storage, never sent anywhere: <span class="mono">sentinel:theme</span> remembers whether you chose the light or dark theme, and <span class="mono">sentinel:stay</span> remembers whether you asked to stay signed in on this browser. While you fill in the sign-up or password-reset form, what you have typed (never a password) is kept for that browser tab only, so the back button does not lose it; it is gone when the tab closes or the form is sent. On the recovery guide, on the website or in the app, what you tick and which steps you have done are kept in <span class="mono">sentinel:recover</span> in this browser only, never sent anywhere, and Start over clears them. A link to the guide from a warning can tick what the warning was about, through the page’s address (for example <span class="mono">?happened=password</span>); nothing else is added to it. On “Is this call a scam?”, the answer is worked out in your browser from what you tick; nothing you tick is sent anywhere or kept, and it is gone when you leave the page. In the Windows app, <span class="mono">sentinel:asked:chat</span> and <span class="mono">sentinel:asked:exposure</span> remember that you answered the “New in Sentinel” card for chat safety or exposure alerts, so it is not shown again.</li>
+        <li>The web app may register a service worker that caches Sentinel’s own fonts and scripts so pages load faster. It stores nothing about you.</li>
+        <li>The browser companion keeps its settings, your pairing token and a short-lived cache of recent verdicts in the browser’s extension storage on your computer.</li>
+        <li>If you turn on the companion’s password alarm, it reads the password you type when you sign in to an account you chose to protect and keeps only a salted, scrambled form of it (a PBKDF2 hash) and its length on your computer, for the last three different passwords you signed in with, never the password itself, and nothing about it is sent anywhere. On other sites, a password you type is turned into the same kind of hash, on your computer, only to compare it, then dropped.</li>
       </ul>
 
-      <h2>6. Who else sees anything</h2>
+      <h2 id="section-6">6. Who else sees anything</h2>
       <p>Sentinel does not sell personal data and does not share it for advertising. The following services are involved, each only for the purpose stated.</p>
       <ul>
-        <li><b>Public threat lists</b> (OpenPhish, URLhaus by abuse.ch, Phishing.Database) are downloaded to Sentinel. Nothing about you is sent to them.</li>
-        <li><b>Domain registries (RDAP)</b> and <b>the site being scanned</b> receive requests from Sentinel&rsquo;s servers during research scans, so they see that Sentinel looked, not who asked.</li>
-        <li><b>Google Safe Browsing</b>, only if the operator configures it, receives the web address being checked.</li>
-        <li><b>Have I Been Pwned</b> is asked whether a new password has appeared in a known data breach. It receives only the first 5 characters of a scrambled form (hash) of the password, which matches hundreds of passwords, never the password itself.</li>
-        <li><b>Resend</b> delivers account emails (confirmation, password reset) on the hosted service and receives your email address and the message.</li>
-        <li><b>Google</b>, only if you choose &ldquo;Continue with Google&rdquo;, tells Sentinel your email, name and profile picture, and whether the address is verified.</li>
-        <li><b>GitHub</b> hosts the public website and the app downloads. Like any web host, it logs the IP addresses of visitors under its own privacy policy. The download page also asks GitHub&rsquo;s API for the latest release version.</li>
-        <li><b>AI providers</b> (OpenAI, Anthropic, Google, DeepSeek) receive the messages you send through the optional assistants, under their terms, using your own key.</li>
+        <li>
+<b>Public threat lists</b> (OpenPhish, URLhaus by abuse.ch, Phishing.Database) are downloaded to Sentinel. Nothing about you is sent to them.</li>
+        <li>
+<b>Domain registries (RDAP)</b> and <b>the site being scanned</b> receive requests from Sentinel’s servers during research scans, so they see that Sentinel looked, not who asked.</li>
+        <li>
+<b>Google Safe Browsing</b>, only if the operator configures it, receives the web address being checked.</li>
+        <li>
+<b>Have I Been Pwned</b> is asked whether a new password has appeared in a known data breach. It receives only the first 5 characters of a scrambled form (hash) of the password, which matches hundreds of passwords, never the password itself.</li>
+        <li>
+<b>Resend</b> delivers account emails (confirmation, password reset) on the hosted service and receives your email address and the message.</li>
+        <li>
+<b>Google</b>, only if you choose “Continue with Google”, tells Sentinel your email, name and profile picture, and whether the address is verified.</li>
+        <li>
+<b>GitHub</b> hosts the public website and the app downloads. Like any web host, it logs the IP addresses of visitors under its own privacy policy. The download page also asks GitHub’s API for the latest release version.</li>
+        <li>
+<b>AI providers</b> (OpenAI, Anthropic, Google, DeepSeek) receive the messages you send through the optional assistants, under their terms, using your own key.</li>
       </ul>
 
-      <h2>7. What Sentinel never does</h2>
+      <h2 id="section-7">7. What Sentinel never does</h2>
       <ul>
-        <li>Record what you type into websites, or read pages behind your logins. (The companion&rsquo;s password alarm, when you turn it on, compares passwords as described above and keeps none of them.)</li>
-        <li>Take screenshots of your screen (a screenshot is only read when you choose one for an email scan, a text scan or a QR code, or draw a box with Check something on screen; while a results page scrolls, live scanning measures how far it moved from a narrow strip reduced to brightness numbers, as described above, and keeps no image), record your screen, or change anything inside your browser (the companion&rsquo;s own changes are its warnings, holding back a command a page tries to copy, and emptying a password box when the password alarm goes off; chat safety and text checking, when you turn them on, read the chat box or the conversation as described above and keep no image). The marks live scanning draws are in Sentinel&rsquo;s own window, on top of the page.</li>
+        <li>Record what you type into websites, or read pages behind your logins. (The companion’s password alarm, when you turn it on, compares passwords as described above and keeps none of them.)</li>
+        <li>Take screenshots of your screen (a screenshot is only read when you choose one for an email scan, a text scan or a QR code, or draw a box with Check something on screen; while a results page scrolls, live scanning measures how far it moved from a narrow strip reduced to brightness numbers, as described above, and keeps no image), record your screen, or change anything inside your browser (the companion’s own changes are its warnings, holding back a command a page tries to copy, and emptying a password box when the password alarm goes off; chat safety and text checking, when you turn them on, read the chat box or the conversation as described above and keep no image). The marks live scanning draws are in Sentinel’s own window, on top of the page.</li>
         <li>Read a browser that is not the window in front, or keep anything about a private window.</li>
-        <li>Act against a program because of a guess when Windows can vouch for its publisher. Defense ends, quarantines or removes something only for a known malicious file or strong evidence, never for &ldquo;possible&rdquo;, and whatever it removes can be put back from the defense log.</li>
+        <li>Act against a program because of a guess when Windows can vouch for its publisher. Defense ends, quarantines or removes something only for a known malicious file or strong evidence, never for “possible”, and whatever it removes can be put back from the defense log.</li>
         <li>Run analytics, trackers or crash reporters on the website or in the app. The desktop app writes a local log file for troubleshooting, which stays on your computer unless you choose to send it to us.</li>
         <li>Ask for your password to any other service.</li>
         <li>Keep the files, emails or text messages you scan.</li>
       </ul>
 
-      <h2>8. How it is protected</h2>
+      <h2 id="section-8">8. How it is protected</h2>
       <p>On the hosted service, traffic is encrypted with TLS. Passwords are hashed with scrypt, secrets are encrypted at rest, accounts lock after repeated failed sign-ins, and two-factor authentication is available to everyone. Research requests run from isolated servers that refuse to connect to private networks. No system is perfectly secure, and if a breach affected your data we would tell you.</p>
 
-      <h2>9. Your choices and rights</h2>
+      <h2 id="section-9">9. Your choices and rights</h2>
       <ul>
         <li>Delete your account at any time from Security settings. Everything in section 3 is removed immediately, except security-log entries that finish their 180 days and the reports you filed, which stay with no link to you.</li>
         <li>Revoke any signed-in device, remove any trusted or blocked site, and disconnect any AI assistant from the app.</li>
         <li>Ask us what we hold about you, to correct it, or to delete it, by emailing <a href="mailto:privacy@usesentinel.technology">privacy@usesentinel.technology</a>. Depending on where you live, laws such as the GDPR or the CCPA may give you further rights, including to complain to a regulator.</li>
       </ul>
 
-      <h2>10. Children</h2>
+      <h2 id="section-10">10. Children</h2>
       <p>Sentinel is for people aged 18 and over. We do not knowingly collect information from anyone under 18, and we close accounts we learn belong to minors.</p>
       <p>A parent or guardian may turn on chat safety on a computer a child uses, to protect the child in Roblox and Discord. It works entirely on that computer: nothing the child or anyone else writes is collected by us, and the badge on screen tells the child chat safety is on. We encourage parents to tell their children it is there and why.</p>
 
-      <h2>11. Changes</h2>
+      <h2 id="section-11">11. Changes</h2>
       <p>If this policy changes in a way that matters, we will say so in the app or by email before the change takes effect, and update the date at the top.</p>
 
-      <h2>12. Contact</h2>
+      <h2 id="section-12">12. Contact</h2>
       <p><a href="mailto:privacy@usesentinel.technology">privacy@usesentinel.technology</a></p>
 
     </div>
   </section>
 </main>
-<footer class="footer">
-  <div class="wrap">
-    <div class="footer__grid">
-      <div class="footer__brand">
-        <a class="logo" href="index.html">
-          <span class="logo__mark"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M32 2.6 57.4 10v18.6c0 14.6-9.9 24.6-25.4 31.4C16.5 53.2 6.6 43.2 6.6 28.6V10Zm0 4.2L10.6 13v15.6c0 12.2 8 20.7 21.4 26.8 13.4-6.1 21.4-14.6 21.4-26.8V13Z"/><g transform="translate(32 30.5) scale(.70) translate(-32 -30.5)"><path fill="currentColor" fill-rule="evenodd" d="M32 11.6c-5.6 0-10.4 1.8-12.6 5C18.4 18.1 18 19.9 18 21.8v7.8c0 3.8 1.2 7 3.4 9.8L32 49.4l10.6-10c2.2-2.8 3.4-6 3.4-9.8v-7.8c0-1.9-.4-3.7-1.4-5.2-2.2-3.2-7-5-12.6-5ZM21 23.4l8 3-.5 3.6-7.5-1.8ZM43 23.4l-8 3 .5 3.6 7.5-1.8ZM24.6 32l4.6 1.1v8.4l-3-3.4ZM39.4 32l-4.6 1.1v8.4l3-3.4Z"/><path fill="currentColor" fill-rule="evenodd" d="M42.8 16.2a2.3 2.3 0 1 1 0 4.6 2.3 2.3 0 0 1 0-4.6Z"/></g></svg></span>
-          Sentinel
-        </a>
-        <p>Scam, virus and malware protection that shows you the danger before you click.</p>
-      </div>
-      <div>
-        <h2 class="footer__h">Product</h2>
-        <ul>
-          <li><a href="download.html">Download</a></li>
-          <li><a  role="link" aria-disabled="true" title="Not available until launch">Web app</a></li>
-          <li><a href="pricing.html">Pricing</a></li>
-          <li><a href="index.html#how">How it works</a></li>
-          <li><a href="practice.html">Spot the scam</a></li>
-          <li><a href="recover.html">Been scammed?</a></li>
-        </ul>
-      </div>
-      <div>
-        <h2 class="footer__h">Account</h2>
-        <ul>
-          <li><a  role="link" aria-disabled="true" title="Not available until launch">Create account</a></li>
-          <li><a  role="link" aria-disabled="true" title="Not available until launch">Sign in</a></li>
-          <li><a  role="link" aria-disabled="true" title="Not available until launch">Security settings</a></li>
-        </ul>
-      </div>
-      <div>
-        <h2 class="footer__h">Company</h2>
-        <ul>
-          <li><a href="privacy.html">Privacy</a></li>
-          <li><a href="terms.html">Terms</a></li>
-          <li><a href="refunds.html">Refunds</a></li>
-          <li><a href="mailto:support@usesentinel.technology">Support</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer__base">
-      <span>&copy; <span data-year>2026</span> Sentinel. All rights reserved.</span>
-      <span class="mono">www.usesentinel.technology</span>
-    </div>
-  </div>
-</footer>
+<footer class="footer"><div class="wrap">
+<div class="footer__grid">
+<div class="footer__brand">
+<a class="logo" href="index.html" aria-label="Sentinel home">
+      <span class="logo__mark"><svg viewbox="0 0 64 64" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M32 2.6 57.4 10v18.6c0 14.6-9.9 24.6-25.4 31.4C16.5 53.2 6.6 43.2 6.6 28.6V10Zm0 4.2L10.6 13v15.6c0 12.2 8 20.7 21.4 26.8 13.4-6.1 21.4-14.6 21.4-26.8V13Z"></path><g transform="translate(32 30.5) scale(.70) translate(-32 -30.5)"><path fill="currentColor" fill-rule="evenodd" d="M32 11.6c-5.6 0-10.4 1.8-12.6 5C18.4 18.1 18 19.9 18 21.8v7.8c0 3.8 1.2 7 3.4 9.8L32 49.4l10.6-10c2.2-2.8 3.4-6 3.4-9.8v-7.8c0-1.9-.4-3.7-1.4-5.2-2.2-3.2-7-5-12.6-5ZM21 23.4l8 3-.5 3.6-7.5-1.8ZM43 23.4l-8 3 .5 3.6 7.5-1.8ZM24.6 32l4.6 1.1v8.4l-3-3.4ZM39.4 32l-4.6 1.1v8.4l3-3.4Z"></path><path fill="currentColor" fill-rule="evenodd" d="M42.8 16.2a2.3 2.3 0 1 1 0 4.6 2.3 2.3 0 0 1 0-4.6Z"></path></g></svg></span>
+      Sentinel
+    </a>
+    <p>A clearer view of the internet.<br>Independent product preview.</p>
+<span class="preview-label">Pre-launch · no accounts or payments</span>
+</div>
+<div>
+<h2 class="footer__h">Explore</h2>
+<ul>
+<li><a href="index.html#try">Check a link</a></li>
+<li><a href="index.html#masks">The masks</a></li>
+<li><a href="pricing.html">Planned pricing</a></li>
+<li><a href="download.html">Release status</a></li>
+</ul>
+</div>
+<div>
+<h2 class="footer__h">Get help</h2>
+<ul>
+<li><a href="practice.html">Practice inbox</a></li>
+<li><a href="recover.html">Recovery guide</a></li>
+<li><a href="index.html#faq">Questions</a></li>
+<li><a href="mailto:support@usesentinel.technology">Contact support</a></li>
+</ul>
+</div>
+<div>
+<h2 class="footer__h">The details</h2>
+<ul>
+<li><a href="privacy.html">Privacy</a></li>
+<li><a href="terms.html">Terms</a></li>
+<li><a href="refunds.html">Refunds</a></li>
+</ul>
+</div>
+</div>
+<div class="footer__base">
+<span>© <span data-year>2026</span> Sentinel</span><span>Unmask the internet.</span>
+</div>
+</div></footer><script src="assets/js/masks.js"></script>
 
-<script src="assets/js/masks.js"></script>
-<!-- Deferred, so they run after site.js; before it in the page, so site.js can see they are coming. -->
-<script src="assets/js/vendor/gsap.min.js" defer></script>
-<script src="assets/js/vendor/ScrollTrigger.min.js" defer></script>
-<script src="assets/js/vendor/lenis.min.js" defer></script>
-<script src="assets/js/motion.js" defer></script>
 <script src="assets/js/site.js"></script>
-<script src="assets/js/anime.min.js" defer></script>
-<script src="assets/js/lux.js" defer></script>
 </body>
 </html>

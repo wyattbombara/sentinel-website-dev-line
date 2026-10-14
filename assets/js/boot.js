@@ -2,31 +2,6 @@
 document.documentElement.classList.add('js');
 
 /*
- * The opening (intro.js) plays once per visit, never with reduced motion, never in a test browser, and never for a
- * page that is only being printed or prerendered. The class goes on now, before the first paint, so the page does
- * not flash before the cover; whatever happens to intro.js, it comes off by itself after 10 s (intro.js itself never runs
- * past 8 s, the longest a slow page is allowed to keep its sketch).
- */
-(function () {
-  try {
-    // ?intro=1 plays it regardless (the review screenshots photograph it that way).
-    var forced = /[?&]intro=1\b/.test(location.search);
-    // Crawlers and speed tests see the page itself: the opening is for people.
-    if (!forced && (sessionStorage.getItem('sentinel:intro') || navigator.webdriver || /HeadlessChrome|bot|crawl|spider|slurp|Lighthouse|PageSpeed/i.test(navigator.userAgent))) return;
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (!forced && (document.visibilityState === 'hidden' || document.prerendering)) return;
-    document.documentElement.classList.add('intro');
-    // Fail open: if intro.js never ran, the page still uncovers and whatever waits for the opening still starts.
-    setTimeout(function () {
-      var r = document.documentElement;
-      if (!r.classList.contains('intro')) return;
-      r.classList.remove('intro');
-      document.dispatchEvent(new Event('sentinel:intro-done'));
-    }, 10000);
-  } catch (e) { /* storage blocked: no opening */ }
-})();
-
-/*
  * Light or dark. "Auto" (nothing stored) follows the system; a choice is remembered on this device. Applied here,
  * before the page is painted, so it never flashes the other theme. Any [data-theme-toggle] button cycles
  * Auto, Light, Dark and says which is on.
@@ -35,7 +10,9 @@ document.documentElement.classList.add('js');
   const KEY = 'sentinel:theme';
   const order = ['auto', 'light', 'dark'];
   const read = () => { try { const v = localStorage.getItem(KEY); return v === 'light' || v === 'dark' ? v : 'auto'; } catch { return 'auto'; } };
+  let current = read();
   const apply = (mode) => {
+    current = mode;
     if (mode === 'auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = mode;
     for (const b of document.querySelectorAll('[data-theme-toggle]')) {
       const label = `Theme: ${mode === 'auto' ? 'automatic' : mode}`;
@@ -46,12 +23,12 @@ document.documentElement.classList.add('js');
       if (text) text.textContent = mode === 'auto' ? 'Auto' : mode === 'light' ? 'Light' : 'Dark';
     }
   };
-  apply(read());
-  document.addEventListener('DOMContentLoaded', () => apply(read()));
+  apply(current);
+  document.addEventListener('DOMContentLoaded', () => apply(current));
   document.addEventListener('click', (ev) => {
     const b = ev.target.closest && ev.target.closest('[data-theme-toggle]');
     if (!b) return;
-    const next = order[(order.indexOf(read()) + 1) % order.length];
+    const next = order[(order.indexOf(current) + 1) % order.length];
     try { if (next === 'auto') localStorage.removeItem(KEY); else localStorage.setItem(KEY, next); } catch { /* this page only */ }
     apply(next);
   });
