@@ -8,7 +8,7 @@ from pathlib import Path
 from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / 'assets' / 'img' / 'scene'
+OUT = ROOT / 'design' / 'study-renders'
 OUT.mkdir(parents=True, exist_ok=True)
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)

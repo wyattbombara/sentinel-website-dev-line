@@ -25,7 +25,7 @@ const types={'.html':'text/html','.css':'text/css','.js':'text/javascript','.web
       await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
       base=`http://127.0.0.1:${server.address().port}`;
     }
-    browser=await chromium.launch(process.env.SENTINEL_CHROMIUM ? {executablePath:process.env.SENTINEL_CHROMIUM} : {});
+    browser=await chromium.launch({...process.env.SENTINEL_CHROMIUM?{executablePath:process.env.SENTINEL_CHROMIUM}:{},args:['--use-angle=swiftshader']});
     const failures=[],network=[],results=[];
     // Both themes, all pages, small phone through wide desktop plus landscape.
     for(const width of [375,768,1024,1440,812]) {
@@ -43,6 +43,7 @@ const types={'.html':'text/html','.css':'text/css','.js':'text/javascript','.web
             await page.waitForFunction(()=>document.querySelector('[data-scene] img').complete&&document.querySelector('[data-scene] img').naturalWidth>0);
             const art=await page.locator('[data-scene] img').evaluate(el=>el.currentSrc);
             assert.ok(art.includes(`sentinel-${theme}-${width<=800?'portrait':'desktop'}.webp`),`${width}px ${theme} selects the matching scene`);
+            assert.equal(await page.locator('script[src$="/hero-scene.js"]').count(),0,'reduced motion does not download the 3D bundle');
           }
           assert.equal(await page.locator('h1').count(),1,`${name}: heading`);
           const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);
@@ -102,12 +103,54 @@ const types={'.html':'text/html','.css':'text/css','.js':'text/javascript','.web
     const moving=await motion.newPage();moving.on('pageerror',error=>failures.push(error.message));
     await motion.route('**/*',route=>route.request().url().startsWith(base)?route.continue():route.abort());
     await moving.goto(`${base}/index.html`);
+    await moving.waitForFunction(()=>document.querySelector('.hero--reveal').dataset.renderer==='ready');
+    assert.equal(await moving.locator('.hero--reveal').getAttribute('data-motion'),'running');
+    await moving.locator('[data-motion-toggle]').click();
+    assert.equal(await moving.locator('.hero--reveal').getAttribute('data-motion'),'paused');
+    await moving.locator('#stage-demo').scrollIntoViewIfNeeded();
+    await moving.locator('#top').scrollIntoViewIfNeeded();
+    assert.equal(await moving.locator('.hero--reveal').getAttribute('data-motion'),'paused','manual pause survives leaving the hero');
+    await moving.locator('[data-motion-toggle]').click();
+    await moving.waitForFunction(()=>document.querySelector('.hero--reveal').dataset.motion==='running');
     await moving.mouse.move(1200,400);
     const offset=await moving.locator('[data-scene]').evaluate(el=>parseFloat(el.style.getPropertyValue('--scene-x')));
     assert.ok(Number.isFinite(offset)&&Math.abs(offset)<=6,'pointer offset is bounded');
     await moving.mouse.move(10,10);
     assert.equal(await moving.locator('[data-scene]').evaluate(el=>el.style.getPropertyValue('--scene-x')),'0px','pointer leave resets the scene');
+    await moving.locator('#stage-demo').scrollIntoViewIfNeeded();
+    await moving.waitForFunction(()=>document.querySelector('.hero--reveal').dataset.motion==='resting');
+    await moving.locator('#top').scrollIntoViewIfNeeded();
+    await moving.emulateMedia({reducedMotion:'reduce'});
+    await moving.waitForFunction(()=>document.querySelector('.hero--reveal').dataset.motion==='reduced');
+    assert.equal(await moving.locator('[data-motion-toggle]').isVisible(),false);
     await motion.close();
+    const copies=await browser.newContext({viewport:{width:375,height:812},colorScheme:'dark',reducedMotion:'reduce'});
+    const copyPage=await copies.newPage();
+    await copyPage.addInitScript(()=>{sessionStorage.removeItem('sentinel:hero-preset');const i=Number(new URLSearchParams(location.search).get('copy-test'));Math.random=()=>(i+.5)/12;});
+    for(let index=0;index<12;index++){
+      await copyPage.goto(`${base}/index.html?copy-test=${index}`);
+      assert.equal(Number(await copyPage.locator('.hero--reveal').getAttribute('data-copy-preset')),index);
+      assert.equal(await copyPage.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,`copy preset ${index} fits phone width`);
+      const heading=await copyPage.locator('h1').boundingBox();
+      assert.ok(heading.height<150,`copy preset ${index} stays on two lines`);
+      const action=await copyPage.locator('.hero--reveal .hero__cta a[href="#try"]').boundingBox();
+      assert.ok(action.y+action.height<=813,`copy preset ${index} keeps the checker action in the first phone view`);
+    }
+    await copies.close();
+    const refresh=await browser.newContext({viewport:{width:375,height:812},reducedMotion:'reduce'});
+    const refreshed=await refresh.newPage();await refreshed.goto(`${base}/index.html`);
+    let previous=await refreshed.locator('.hero--reveal').getAttribute('data-copy-preset');
+    for(let i=0;i<5;i++){
+      await refreshed.reload();const next=await refreshed.locator('.hero--reveal').getAttribute('data-copy-preset');
+      assert.notEqual(next,previous,'refresh picks a different preset');previous=next;
+    }
+    await refresh.close();
+    const noGL=await browser.newContext({viewport:{width:375,height:812},reducedMotion:'no-preference'});
+    await noGL.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return /webgl/.test(type)?null:original.call(this,type,...args);};});
+    const staticHero=await noGL.newPage();await staticHero.goto(`${base}/index.html`);
+    await staticHero.waitForFunction(()=>document.querySelector('.hero--reveal').dataset.renderer==='fallback');
+    assert.equal(await staticHero.locator('[data-scene] img').isVisible(),true,'poster replaces unavailable WebGL');
+    assert.equal(await staticHero.locator('h1').isVisible(),true);await noGL.close();
     const failedArt=await browser.newContext({viewport:{width:375,height:812},colorScheme:'dark'});
     await failedArt.route('**/assets/img/scene/**',route=>route.abort());
     const fallback=await failedArt.newPage();await fallback.goto(`${base}/index.html`);

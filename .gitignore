@@ -4,3 +4,4 @@ test-results/
 dist/
 assets/img/scene/*.png
 design/*.blend1
+design/study-renders/
