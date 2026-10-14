@@ -2,3 +2,6 @@ node_modules/
 test-results/
 .openai/
 dist/
+assets/img/scene/*.png
+design/*.blend1
+design/study-renders/

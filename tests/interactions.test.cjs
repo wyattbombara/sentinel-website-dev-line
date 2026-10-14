@@ -9,6 +9,11 @@ const { parseHTML } = require('linkedom');
 const root = path.resolve(__dirname,'..');
 const read = file => fs.readFileSync(path.join(root,file),'utf8');
 const flush = async () => { for(let i=0;i<8;i++) await new Promise(resolve=>setImmediate(resolve)); };
+const settled = async element => {
+  const deadline=Date.now()+10000;
+  while(element.hasAttribute('aria-busy')&&Date.now()<deadline) await new Promise(resolve=>setTimeout(resolve,20));
+  assert.equal(element.hasAttribute('aria-busy'),false,'the local check completes');
+};
 
 function mount(file='index.html', {reduced=true, blockedStorage=false}={}) {
   const {window,document} = parseHTML(read(file));
@@ -130,12 +135,12 @@ test('local form shows an honest clean result, inline invalid feedback, and reco
   window.SentinelEngine=engineContext.window.SentinelEngine;
   const append=document.head.appendChild.bind(document.head);
   document.head.appendChild=el=>{const added=append(el);if(el.tagName==='SCRIPT')queueMicrotask(()=>el.onload());return added;};
-  input.value='https://www.wikipedia.org';event(form,'submit');await new Promise(resolve=>setTimeout(resolve,100));await flush();
+  input.value='https://www.wikipedia.org';event(form,'submit');await settled(out);await flush();
   assert.ok(out.textContent.includes('No warning signs in the address'));
   assert.ok(out.textContent.includes('Threat lists were not checked'));
   assert.equal(out.hasAttribute('aria-busy'),false);
   input.value='javascript:alert(1)';event(form,'submit');await flush();assert.equal(input.getAttribute('aria-invalid'),'true');
-  input.value='https://paypal-account-verify.com/login';event(form,'submit');await flush();
+  input.value='https://paypal-account-verify.com/login';event(form,'submit');await settled(out);await flush();
   assert.equal(input.hasAttribute('aria-invalid'),false);assert.ok(out.textContent.includes('Scam'));
   assert.equal(form.querySelector('button').disabled,false);
 });

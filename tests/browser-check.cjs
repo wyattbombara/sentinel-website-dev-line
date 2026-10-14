@@ -25,7 +25,7 @@ const types={'.html':'text/html','.css':'text/css','.js':'text/javascript','.web
       await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
       base=`http://127.0.0.1:${server.address().port}`;
     }
-    browser=await chromium.launch();
+    browser=await chromium.launch({...process.env.SENTINEL_CHROMIUM?{executablePath:process.env.SENTINEL_CHROMIUM}:{},args:['--use-angle=swiftshader']});
     const failures=[],network=[],results=[];
     // Both themes, all pages, small phone through wide desktop plus landscape.
     for(const width of [375,768,1024,1440,812]) {
@@ -39,6 +39,12 @@ const types={'.html':'text/html','.css':'text/css','.js':'text/javascript','.web
         page.on('pageerror',error=>failures.push(error.message));
         for(const name of pages) {
           await page.goto(`${base}/${name}.html`);await page.evaluate(()=>document.fonts.ready);
+          if(name==='index') {
+            await page.waitForFunction(()=>document.querySelector('[data-scene] img').complete&&document.querySelector('[data-scene] img').naturalWidth>0);
+            const art=await page.locator('[data-scene] img').evaluate(el=>el.currentSrc);
+            assert.ok(art.includes(`sentinel-${theme}-${width<=800?'portrait':'desktop'}.webp`),`${width}px ${theme} selects the matching scene`);
+            assert.equal(await page.locator('script[src$="/hero-scene.js"]').count(),0,'reduced motion does not download the 3D bundle');
+          }
           assert.equal(await page.locator('h1').count(),1,`${name}: heading`);
           const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);
           assert.equal(overflow,false,`${name}: ${width}px ${theme} horizontal overflow`);
@@ -57,7 +63,11 @@ const types={'.html':'text/html','.css':'text/css','.js':'text/javascript','.web
     const menu=page.locator('[data-nav-toggle]');await menu.click();assert.equal(await menu.getAttribute('aria-expanded'),'true');
     await page.keyboard.press('Escape');assert.equal(await menu.getAttribute('aria-expanded'),'false');
     await page.locator('[data-theme-toggle]').click();assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
+    await page.waitForFunction(()=>document.querySelector('[data-scene] img').currentSrc.includes('sentinel-light-portrait.webp'));
     await page.locator('[data-theme-toggle]').click();assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
+    await page.waitForFunction(()=>document.querySelector('[data-scene] img').currentSrc.includes('sentinel-dark-portrait.webp'));
+    await page.mouse.move(100,200);
+    assert.equal(await page.locator('[data-scene]').evaluate(el=>getComputedStyle(el).transform),'none','reduced motion freezes the scene');
     await page.setViewportSize({width:1440,height:900});
     await page.locator('a[href="#stage-demo"]').click();
     await page.locator('[data-serp] .res[role="button"]').first().waitFor();
@@ -86,8 +96,84 @@ const types={'.html':'text/html','.css':'text/css','.js':'text/javascript','.web
     await page.locator('[data-recover-reset]').click();assert.equal(await page.locator('[data-step]').count(),0);
     await page.goto(`${base}/download.html`);assert.equal(await page.locator('[data-installer]').getAttribute('href'),null);
     await context.close();
-    const noJS=await browser.newContext({javaScriptEnabled:false,viewport:{width:375,height:812}});
-    const plain=await noJS.newPage();await plain.goto(`${base}/index.html`);assert.equal(await plain.locator('h1').isVisible(),true);assert.ok((await plain.locator('main').innerText()).includes('needs JavaScript'));await noJS.close();
+    const noJS=await browser.newContext({javaScriptEnabled:false,viewport:{width:375,height:812},colorScheme:'light'});
+    const plain=await noJS.newPage();await plain.goto(`${base}/index.html`);assert.equal(await plain.locator('h1').isVisible(),true);assert.ok((await plain.locator('main').innerText()).includes('needs JavaScript'));
+    assert.ok((await plain.locator('[data-scene] img').evaluate(el=>el.currentSrc)).includes('sentinel-light-portrait.webp'),'light poster works without JavaScript');await noJS.close();
+    const motion=await browser.newContext({viewport:{width:1440,height:900},colorScheme:'dark',reducedMotion:'no-preference'});
+    const moving=await motion.newPage();moving.on('pageerror',error=>failures.push(error.message));
+    await motion.route('**/*',route=>route.request().url().startsWith(base)?route.continue():route.abort());
+    await moving.goto(`${base}/index.html`);
+    await moving.waitForFunction(()=>document.querySelector('.hero--reveal').dataset.renderer==='ready');
+    assert.equal(await moving.locator('.hero--reveal').getAttribute('data-motion'),'running');
+    // Prove that rendered pixels move, not just the data-motion label.
+    await moving.waitForTimeout(1000);
+    const firstFrame=await moving.locator('[data-scene] canvas').screenshot();
+    await moving.waitForTimeout(1200);
+    const secondFrame=await moving.locator('[data-scene] canvas').screenshot();
+    assert.ok(!firstFrame.equals(secondFrame),'the 3D room visibly animates');
+    await moving.locator('[data-motion-toggle]').click();
+    assert.equal(await moving.locator('.hero--reveal').getAttribute('data-motion'),'paused');
+    const pausedFrame=await moving.locator('[data-scene] canvas').screenshot();
+    await moving.waitForTimeout(250);
+    assert.ok(pausedFrame.equals(await moving.locator('[data-scene] canvas').screenshot()),'pause freezes rendered pixels');
+    await moving.locator('#stage-demo').scrollIntoViewIfNeeded();
+    await moving.locator('#top').scrollIntoViewIfNeeded();
+    assert.equal(await moving.locator('.hero--reveal').getAttribute('data-motion'),'paused','manual pause survives leaving the hero');
+    await moving.locator('[data-motion-toggle]').click();
+    await moving.waitForFunction(()=>document.querySelector('.hero--reveal').dataset.motion==='running');
+    await moving.mouse.move(1200,400);
+    const offset=await moving.locator('[data-scene]').evaluate(el=>parseFloat(el.style.getPropertyValue('--scene-x')));
+    assert.ok(Number.isFinite(offset)&&Math.abs(offset)<=6,'pointer offset is bounded');
+    await moving.mouse.move(10,10);
+    assert.equal(await moving.locator('[data-scene]').evaluate(el=>el.style.getPropertyValue('--scene-x')),'0px','pointer leave resets the scene');
+    await moving.locator('#stage-demo').scrollIntoViewIfNeeded();
+    await moving.waitForFunction(()=>document.querySelector('.hero--reveal').dataset.motion==='resting');
+    await moving.locator('#top').scrollIntoViewIfNeeded();
+    await moving.emulateMedia({reducedMotion:'reduce'});
+    await moving.waitForFunction(()=>document.querySelector('.hero--reveal').dataset.motion==='reduced');
+    assert.equal(await moving.locator('[data-motion-toggle]').isVisible(),false);
+    await motion.close();
+    const copies=await browser.newContext({viewport:{width:375,height:812},colorScheme:'dark',reducedMotion:'reduce'});
+    const copyPage=await copies.newPage();
+    await copyPage.addInitScript(()=>{sessionStorage.removeItem('sentinel:hero-preset');const i=Number(new URLSearchParams(location.search).get('copy-test'));Math.random=()=>(i+.5)/12;});
+    for(let index=0;index<12;index++){
+      await copyPage.goto(`${base}/index.html?copy-test=${index}`);
+      assert.equal(Number(await copyPage.locator('.hero--reveal').getAttribute('data-copy-preset')),index);
+      assert.equal(await copyPage.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,`copy preset ${index} fits phone width`);
+      const heading=await copyPage.locator('h1').boundingBox();
+      assert.ok(heading.height<150,`copy preset ${index} stays on two lines`);
+      const action=await copyPage.locator('.hero--reveal .hero__cta a[href="#try"]').boundingBox();
+      assert.ok(action.y+action.height<=813,`copy preset ${index} keeps the checker action in the first phone view`);
+    }
+    await copies.close();
+    const refresh=await browser.newContext({viewport:{width:375,height:812},reducedMotion:'reduce'});
+    const refreshed=await refresh.newPage();await refreshed.goto(`${base}/index.html`);
+    let previous=await refreshed.locator('.hero--reveal').getAttribute('data-copy-preset');
+    for(let i=0;i<5;i++){
+      await refreshed.reload();const next=await refreshed.locator('.hero--reveal').getAttribute('data-copy-preset');
+      assert.notEqual(next,previous,'refresh picks a different preset');previous=next;
+    }
+    await refresh.close();
+    const noGL=await browser.newContext({viewport:{width:375,height:812},reducedMotion:'no-preference'});
+    await noGL.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return /webgl/.test(type)?null:original.call(this,type,...args);};});
+    const staticHero=await noGL.newPage();await staticHero.goto(`${base}/index.html`);
+    await staticHero.waitForFunction(()=>document.querySelector('.hero--reveal').dataset.renderer==='fallback');
+    assert.equal(await staticHero.locator('[data-scene] img').isVisible(),true,'poster replaces unavailable WebGL');
+    assert.equal(await staticHero.locator('h1').isVisible(),true);
+    await staticHero.locator('.evidence-ticker').scrollIntoViewIfNeeded();
+    const ticker=staticHero.locator('.evidence-ticker__track');
+    const tickerBefore=await ticker.evaluate(el=>getComputedStyle(el).transform);
+    await staticHero.waitForTimeout(150);
+    assert.notEqual(await ticker.evaluate(el=>getComputedStyle(el).transform),tickerBefore,'presentation still animates without WebGL');
+    await staticHero.locator('[data-motion-toggle]').click();
+    assert.equal(await ticker.evaluate(el=>getComputedStyle(el).animationPlayState),'paused','the same control pauses CSS motion');
+    await noGL.close();
+    const failedArt=await browser.newContext({viewport:{width:375,height:812},colorScheme:'dark'});
+    await failedArt.route('**/assets/img/scene/**',route=>route.abort());
+    const fallback=await failedArt.newPage();await fallback.goto(`${base}/index.html`);
+    assert.equal(await fallback.locator('h1').isVisible(),true,'headline survives failed poster');
+    assert.equal(await fallback.locator('.hero--reveal .hero__cta a[href="#try"]').isVisible(),true,'checker action survives failed poster');
+    await failedArt.close();
     assert.deepEqual(failures,[],'page runtime errors');assert.deepEqual(network,[],'no external requests in preview');
     fs.writeFileSync(path.join(output,'browser-report.json'),JSON.stringify({status:'passed',views:results,interactions:'passed'},null,2));
     console.log(`Passed ${results.length} page/theme/viewport checks and browser interactions.`);

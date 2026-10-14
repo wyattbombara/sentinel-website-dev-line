@@ -4,9 +4,15 @@
   "private": true,
   "description": "Independent static Sentinel website development line",
   "scripts": {
-    "test": "node --test tests/site.test.cjs tests/interactions.test.cjs",
+    "build:hero": "node design/build-hero.cjs",
+    "test": "node --test tests/site.test.cjs tests/interactions.test.cjs tests/hero.test.cjs",
     "test:static": "node --test tests/site.test.cjs",
     "test:browser": "node tests/browser-check.cjs"
   },
-  "devDependencies": { "linkedom": "0.18.13", "playwright": "1.62.1" }
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "linkedom": "0.18.13",
+    "playwright": "1.62.1",
+    "three": "0.186.1"
+  }
 }

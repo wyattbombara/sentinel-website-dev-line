@@ -1,0 +1,32 @@
+{
+  "scene": "Sentinel / The Evidence Room",
+  "created": "2026-10-14",
+  "renderer": "Three.js 0.186.1 / runtime WebGL scene captured with software rendering",
+  "geometry": "Supplied assets/models/scam.glb, unchanged; authored gallery architecture, reflective floor, typographic exhibits, materials, lighting, camera and motion.",
+  "source": "design/hero-scene.mjs",
+  "regenerate": "design/capture-posters.cjs then design/prepare-posters.py",
+  "earlier_study": "design/sentinel-reveal.blend and design/render-scene.py retain the first Blender composition study.",
+  "runtime": "Lazy 3D enhancement capped at 30 fps and bounded pixel density; pauses offscreen/hidden/manually; WebP fallback for reduced motion, data saving, and unavailable WebGL.",
+  "posters": {
+    "sentinel-dark-desktop.webp": {
+      "width": 1600,
+      "height": 1000,
+      "bytes": 47498
+    },
+    "sentinel-dark-portrait.webp": {
+      "width": 900,
+      "height": 1200,
+      "bytes": 38772
+    },
+    "sentinel-light-desktop.webp": {
+      "width": 1600,
+      "height": 1000,
+      "bytes": 48852
+    },
+    "sentinel-light-portrait.webp": {
+      "width": 900,
+      "height": 1200,
+      "bytes": 39328
+    }
+  }
+}
