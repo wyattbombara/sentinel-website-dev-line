@@ -25,7 +25,7 @@ const types={'.html':'text/html','.css':'text/css','.js':'text/javascript','.web
       await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
       base=`http://127.0.0.1:${server.address().port}`;
     }
-    browser=await chromium.launch();
+    browser=await chromium.launch(process.env.SENTINEL_CHROMIUM ? {executablePath:process.env.SENTINEL_CHROMIUM} : {});
     const failures=[],network=[],results=[];
     // Both themes, all pages, small phone through wide desktop plus landscape.
     for(const width of [375,768,1024,1440,812]) {
@@ -39,6 +39,11 @@ const types={'.html':'text/html','.css':'text/css','.js':'text/javascript','.web
         page.on('pageerror',error=>failures.push(error.message));
         for(const name of pages) {
           await page.goto(`${base}/${name}.html`);await page.evaluate(()=>document.fonts.ready);
+          if(name==='index') {
+            await page.waitForFunction(()=>document.querySelector('[data-scene] img').complete&&document.querySelector('[data-scene] img').naturalWidth>0);
+            const art=await page.locator('[data-scene] img').evaluate(el=>el.currentSrc);
+            assert.ok(art.includes(`sentinel-${theme}-${width<=800?'portrait':'desktop'}.webp`),`${width}px ${theme} selects the matching scene`);
+          }
           assert.equal(await page.locator('h1').count(),1,`${name}: heading`);
           const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);
           assert.equal(overflow,false,`${name}: ${width}px ${theme} horizontal overflow`);
@@ -57,7 +62,11 @@ const types={'.html':'text/html','.css':'text/css','.js':'text/javascript','.web
     const menu=page.locator('[data-nav-toggle]');await menu.click();assert.equal(await menu.getAttribute('aria-expanded'),'true');
     await page.keyboard.press('Escape');assert.equal(await menu.getAttribute('aria-expanded'),'false');
     await page.locator('[data-theme-toggle]').click();assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
+    await page.waitForFunction(()=>document.querySelector('[data-scene] img').currentSrc.includes('sentinel-light-portrait.webp'));
     await page.locator('[data-theme-toggle]').click();assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
+    await page.waitForFunction(()=>document.querySelector('[data-scene] img').currentSrc.includes('sentinel-dark-portrait.webp'));
+    await page.mouse.move(100,200);
+    assert.equal(await page.locator('[data-scene]').evaluate(el=>getComputedStyle(el).transform),'none','reduced motion freezes the scene');
     await page.setViewportSize({width:1440,height:900});
     await page.locator('a[href="#stage-demo"]').click();
     await page.locator('[data-serp] .res[role="button"]').first().waitFor();
@@ -86,8 +95,25 @@ const types={'.html':'text/html','.css':'text/css','.js':'text/javascript','.web
     await page.locator('[data-recover-reset]').click();assert.equal(await page.locator('[data-step]').count(),0);
     await page.goto(`${base}/download.html`);assert.equal(await page.locator('[data-installer]').getAttribute('href'),null);
     await context.close();
-    const noJS=await browser.newContext({javaScriptEnabled:false,viewport:{width:375,height:812}});
-    const plain=await noJS.newPage();await plain.goto(`${base}/index.html`);assert.equal(await plain.locator('h1').isVisible(),true);assert.ok((await plain.locator('main').innerText()).includes('needs JavaScript'));await noJS.close();
+    const noJS=await browser.newContext({javaScriptEnabled:false,viewport:{width:375,height:812},colorScheme:'light'});
+    const plain=await noJS.newPage();await plain.goto(`${base}/index.html`);assert.equal(await plain.locator('h1').isVisible(),true);assert.ok((await plain.locator('main').innerText()).includes('needs JavaScript'));
+    assert.ok((await plain.locator('[data-scene] img').evaluate(el=>el.currentSrc)).includes('sentinel-light-portrait.webp'),'light poster works without JavaScript');await noJS.close();
+    const motion=await browser.newContext({viewport:{width:1440,height:900},colorScheme:'dark',reducedMotion:'no-preference'});
+    const moving=await motion.newPage();moving.on('pageerror',error=>failures.push(error.message));
+    await motion.route('**/*',route=>route.request().url().startsWith(base)?route.continue():route.abort());
+    await moving.goto(`${base}/index.html`);
+    await moving.mouse.move(1200,400);
+    const offset=await moving.locator('[data-scene]').evaluate(el=>parseFloat(el.style.getPropertyValue('--scene-x')));
+    assert.ok(Number.isFinite(offset)&&Math.abs(offset)<=6,'pointer offset is bounded');
+    await moving.mouse.move(10,10);
+    assert.equal(await moving.locator('[data-scene]').evaluate(el=>el.style.getPropertyValue('--scene-x')),'0px','pointer leave resets the scene');
+    await motion.close();
+    const failedArt=await browser.newContext({viewport:{width:375,height:812},colorScheme:'dark'});
+    await failedArt.route('**/assets/img/scene/**',route=>route.abort());
+    const fallback=await failedArt.newPage();await fallback.goto(`${base}/index.html`);
+    assert.equal(await fallback.locator('h1').isVisible(),true,'headline survives failed poster');
+    assert.equal(await fallback.locator('.hero--reveal .hero__cta a[href="#try"]').isVisible(),true,'checker action survives failed poster');
+    await failedArt.close();
     assert.deepEqual(failures,[],'page runtime errors');assert.deepEqual(network,[],'no external requests in preview');
     fs.writeFileSync(path.join(output,'browser-report.json'),JSON.stringify({status:'passed',views:results,interactions:'passed'},null,2));
     console.log(`Passed ${results.length} page/theme/viewport checks and browser interactions.`);

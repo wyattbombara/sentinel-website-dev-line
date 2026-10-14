@@ -31,6 +31,7 @@
 <link rel="canonical" href="https://wyattbombara.github.io/sentinel/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Sentinel product preview","description":"Local address checker and saved example demonstrations."}</script>
 <link rel="stylesheet" href="assets/css/redesign.css">
+<link rel="stylesheet" href="assets/css/reveal.css">
 </head>
 <body class="has-prelaunch">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -46,39 +47,36 @@
 <span class="preview-label">Product preview</span><p>Try the local checker and example demos. Accounts, payments and downloads are not available in this preview.</p>
 <a href="download.html">Release status <span aria-hidden="true">→</span></a>
 </div>
-<section class="hero" id="top"><div class="wrap hero__grid">
-<div class="hero__copy">
-<span class="eyebrow"><i aria-hidden="true"></i> A clearer view of the internet</span><h1>Look closer.<br><em>Click wiser.</em>
-</h1>
-<p class="hero__lede">Scams wear familiar faces. Sentinel is designed to reveal the warning signs in links, messages and downloads, before you trust them.</p>
-<div class="hero__cta">
-<a class="btn btn--gold btn--lg" href="#try">Check a link <span aria-hidden="true">↗</span></a><a class="btn btn--lg" href="#stage-demo">Explore the demo <span aria-hidden="true">→</span></a>
-</div>
-<p class="hero__note">No account needed. Address checks stay in your browser.</p>
-</div>
-<div class="hero__visual" aria-hidden="true">
-<div class="hero__visual-top">
-<span>SENTINEL / ARGUS</span><span>PRODUCT PREVIEW</span>
-</div>
-<div class="hero__orbit"></div>
-<img class="hero__art" src="assets/img/masks/onyx.webp" width="788" height="896" alt="" fetchpriority="high"><div class="hero__signal">
-<span class="hero__signal-icon">!</span><div>
-<b>Familiar name. Different address.</b><span>Look beyond the disguise.</span>
-</div>
-</div>
-<div class="hero__visual-bottom">
-<span>SCAM · VIRUS · MALWARE</span><span>01 / 03</span>
-</div>
-</div>
-</div>
-<div class="wrap hero__principles">
-<span><b>01</b> Understand the warning</span><span><b>02</b> See the evidence</span><span><b>03</b> Make the next move</span>
-</div></section><section class="section sec-try" id="try">
+<section class="hero hero--reveal" id="top" aria-labelledby="hero-title">
+  <div class="scene" data-scene aria-hidden="true">
+    <picture>
+      <source media="(prefers-color-scheme:light) and (max-width:800px)" data-orientation="portrait" srcset="assets/img/scene/sentinel-light-portrait.webp">
+      <source media="(prefers-color-scheme:light)" data-orientation="desktop" srcset="assets/img/scene/sentinel-light-desktop.webp">
+      <source media="(max-width:800px)" data-orientation="portrait" srcset="assets/img/scene/sentinel-dark-portrait.webp">
+      <img src="assets/img/scene/sentinel-dark-desktop.webp" width="1600" height="1000" alt="" fetchpriority="high">
+    </picture>
+  </div>
+  <div class="wrap hero__inner">
+    <span class="hero-index" aria-hidden="true">SENTINEL / 001 — REVEAL</span>
+    <div class="hero__copy">
+      <span class="eyebrow">Familiar isn’t always trustworthy.</span>
+      <h1 id="hero-title">Look past<br><span>the disguise.</span></h1>
+      <p class="hero__lede">A familiar name. An unfamiliar address. See the warning signs before you decide what to trust.</p>
+      <div class="hero__cta">
+        <a class="btn btn--gold btn--lg" href="#try">Check a link <span aria-hidden="true">↗</span></a>
+        <a class="btn btn--lg" href="#stage-demo">Explore the demo <span aria-hidden="true">→</span></a>
+      </div>
+      <p class="hero__note">No account. No visit to the link. Checked in your browser.</p>
+    </div>
+    <div class="scene-caption" aria-hidden="true"><b>THE REVEAL</b>Look beyond the surface.<br>Understand what’s underneath.</div>
+    <div class="hero-bottom"><span>SCAM · VIRUS · MALWARE<br>THREE WARNINGS. ONE CLEARER VIEW.</span><a href="#try">Start with an address <span aria-hidden="true">↓</span></a></div>
+  </div>
+</section><section class="section sec-try" id="try">
     <div class="wrap">
       <div class="try">
         <div class="try__copy">
-          <span class="kicker"></span>
-          <h2>Got a link you’re <em>not sure about?</em>
+          <span class="kicker">01 / Inspect the address</span>
+          <h2>Before you click.<br><em>Look a little closer.</em>
 </h2>
           <p data-try-lede>Paste an address and see the warning signs. The check runs locally without opening the site or sending your link anywhere.</p>
           <div class="try__examples" aria-label="Examples">
@@ -112,8 +110,8 @@
   <section class="section sec-demo">
     <div class="wrap">
       <div class="section__head section__head--center">
-        <span class="kicker">Example walkthrough</span>
-        <h2>A warning you can understand.</h2>
+        <span class="kicker">02 / Read the evidence</span>
+        <h2>Not just a warning.<br><em>A reason why.</em></h2>
 </div>
       <div class="stage" id="stage-demo" data-stage>
         <div class="stage__glow"></div>
@@ -849,5 +847,6 @@
 
 <script src="assets/js/site.js"></script>
 <script src="assets/js/home.js"></script>
+<script src="assets/js/reveal.js" defer></script>
 </body>
 </html>

@@ -18,7 +18,13 @@ python3 -m http.server 8765 --bind 127.0.0.1
 
 Open `http://127.0.0.1:8765/index.html`. Use an HTTP server so the local word-list fetch works; do not use `file://` for interaction review.
 
-Styles are in `assets/css/sentinel.css` (component foundations), `interactive.css` (demo behavior), `practice.css` (practice inbox), and `redesign.css` (shared visual system and responsive layouts). Self-hosted Geist and Instrument Serif fonts and existing WebP mask art retain the Sentinel brand. No Blender or new 3D renderer is required.
+Styles are in `assets/css/sentinel.css` (component foundations), `interactive.css` (demo behavior), `practice.css` (practice inbox), `redesign.css` (shared layouts), and `reveal.css` (the Reveal art direction). Self-hosted Geist type and the existing mask art retain the Sentinel brand. The hero uses an original Blender-authored environment around the supplied mask geometry, with separate dark/light and desktop/portrait stills. The editable scene and reproducible rendering script are under `design/`; Blender is needed only to regenerate the stills, not to run the website.
+
+The pointer response has no idle animation loop and respects reduced motion. Theme changes choose the matching artwork; native picture sources provide an automatic-theme fallback without JavaScript. There is no WebGL dependency, compulsory opening animation, or scroll interception.
+
+To regenerate the art, run Blender with `--background --threads 2 --python design/render-scene.py`, then run `python design/prepare-posters.py` with Pillow installed. The second step compresses four WebP posters and records their actual sizes in `design/asset-manifest.json`. Raw PNG renders remain local and are ignored by Git. The existing mask GLB is reused without editing it; the environment, materials, lighting, fragments, and compositions are authored for this development line.
+
+For an existing local Chromium installation, `SENTINEL_CHROMIUM` can point the browser checks at its executable. The checks run headlessly and do not control an interactive browser.
 
 ## Checks
 

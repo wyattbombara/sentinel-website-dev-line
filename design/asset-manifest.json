@@ -1,0 +1,31 @@
+{
+  "scene": "Sentinel / Reveal",
+  "created": "2026-10-14",
+  "renderer": "Blender 4.5.14 / Cycles CPU / 24 samples / denoised",
+  "geometry": "Supplied assets/models/scam.glb, unchanged; original staging, materials, fragments, lights and cameras authored for this redesign.",
+  "source": "design/sentinel-reveal.blend",
+  "regenerate": "design/render-scene.py",
+  "runtime": "Responsive WebP posters; no runtime WebGL; reduced-motion-aware, event-driven pointer offset.",
+  "posters": {
+    "sentinel-dark-desktop.webp": {
+      "width": 1600,
+      "height": 1000,
+      "bytes": 30126
+    },
+    "sentinel-dark-portrait.webp": {
+      "width": 900,
+      "height": 1200,
+      "bytes": 28408
+    },
+    "sentinel-light-desktop.webp": {
+      "width": 1600,
+      "height": 1000,
+      "bytes": 28266
+    },
+    "sentinel-light-portrait.webp": {
+      "width": 900,
+      "height": 1200,
+      "bytes": 24168
+    }
+  }
+}
