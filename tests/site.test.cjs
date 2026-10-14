@@ -6,63 +6,6 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const read = name => fs.readFileSync(path.join(root, name), 'utf8');
 
-function context(fetch, enabled = true, href = 'https://sentinel.test/site/login.html') {
-  const url = new URL(href);
-  const sandbox = { window: { SENTINEL_API_ENABLED: enabled }, fetch, AbortController, setTimeout, clearTimeout, URL, URLSearchParams, location: url };
-  vm.createContext(sandbox);
-  vm.runInContext(read('assets/js/masks.js'), sandbox);
-  sandbox.window.SentinelMasks = sandbox.SentinelMasks;
-  vm.runInContext(read('assets/js/sentinel.js'), sandbox);
-  return sandbox;
-}
-
-test('preview mode never makes API requests', async () => {
-  let calls = 0;
-  const c = context(() => { calls++; }, false);
-  await assert.rejects(c.window.Sentinel.api('/auth/signup', {method:'POST',body:{email:'test@example.com'}}), /coming soon/);
-  assert.equal(calls, 0);
-});
-
-test('HTML hosting fallbacks cannot count as successful API responses', async () => {
-  const c = context(async () => new Response('<html>Home page</html>', {status:200}));
-  await assert.rejects(c.window.Sentinel.api('/auth/login'), /could not load/);
-});
-
-test('API preserves field errors, handles JSON and accepts no-content responses', async () => {
-  const c = context(async () => new Response(JSON.stringify({error:{message:'Invalid email',code:'validation',errors:{email:'Enter an email'}}}), {status:400}));
-  await assert.rejects(c.window.Sentinel.api('/auth/signup'), err => err.status === 400 && err.errors.email === 'Enter an email');
-  c.fetch = async () => new Response(JSON.stringify({user:{name:'Test'}}));
-  assert.equal((await c.window.Sentinel.api('/auth/me')).user.name, 'Test');
-  c.fetch = async () => new Response(null, {status:204});
-  assert.equal(await c.window.Sentinel.api('/auth/logout'), null);
-});
-
-test('hung API calls are aborted and return a usable message', async () => {
-  const c = context((url, {signal}) => new Promise((resolve, reject) => signal.addEventListener('abort', () => reject(Object.assign(new Error('aborted'), {name:'AbortError'})))));
-  c.setTimeout = callback => setTimeout(callback, 5);
-  await assert.rejects(c.window.Sentinel.api('/scan'), /took too long/);
-});
-
-test('verdict content is escaped and risk scores cannot inject HTML', () => {
-  const c = context();
-  const html = c.window.Sentinel.verdictCard({badge:'red',label:'<script>bad</script>',score:'"><img src=x>',reasons:[{text:'<b>unsafe</b>'}]});
-  assert.ok(!html.includes('<script>'));
-  assert.ok(!html.includes('<img'));
-  assert.ok(html.includes('Risk score 0/100'));
-  assert.ok(c.window.Sentinel.verdictCard({score:999}).includes('Risk score 100/100'));
-});
-
-test('severity icons share the supplied logo and have distinct shapes', () => {
-  const c = context();
-  for (const [tone, variant] of [['yellow','normal'],['orange','angular'],['red','horned']]) {
-    const icon = c.window.Sentinel.mask('', tone);
-    assert.ok(icon.includes('assets/img/sentinel.png'));
-    assert.ok(icon.includes(`data-icon-variant="${variant}"`));
-    assert.equal(icon.includes('<path'), tone !== 'yellow');
-  }
-  assert.ok(c.window.Sentinel.badge('red', '<b>danger</b>').includes('&lt;b&gt;danger&lt;/b&gt;'));
-});
-
 test('all local HTML links, fragments and asset references resolve', () => {
   const failures = [];
   for (const file of fs.readdirSync(root).filter(f => f.endsWith('.html'))) {
@@ -81,9 +24,11 @@ test('all local HTML links, fragments and asset references resolve', () => {
 });
 
 test('every script parses, including inline scripts', () => {
-  for (const file of fs.readdirSync(path.join(root, 'assets/js'))) new vm.Script(read(`assets/js/${file}`), {filename:file});
+  for (const file of fs.readdirSync(path.join(root, 'assets/js'), { recursive: true }).filter(f => f.endsWith('.js'))) new vm.Script(read(`assets/js/${file}`), {filename:file});
   for (const file of fs.readdirSync(root).filter(f => f.endsWith('.html'))) {
-    for (const [, script] of read(file).matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)) new vm.Script(script, {filename:file});
+    for (const [, attrs, script] of read(file).matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)) {
+      if (attrs.includes('application/ld+json')) JSON.parse(script); else new vm.Script(script, {filename:file});
+    }
   }
 });
 
@@ -98,100 +43,119 @@ test('pricing has four distinct plans with the requested monthly prices', () => 
   assert.ok(cards[3].includes('500'));
 });
 
-test('sign-in ignores external or malformed return destinations', async () => {
-  for (const next of ['https://evil.test', '//evil.test', '/\\evil.test', 'javascript:alert(1)', '/other.html', 'app.html']) {
-    const c = context(undefined, true, `https://sentinel.test/site/login.html?next=${encodeURIComponent(next)}`);
-    c.location = { href: c.location.href, search: c.location.search };
-    let submit;
-    const nodes = new Map();
-    const node = id => {
-      if (!nodes.has(id)) nodes.set(id, {textContent:'Sign in',disabled:false,hidden:true,insertAdjacentHTML(){}, reportValidity(){return true;},addEventListener(type, callback){if (type === 'submit') submit = callback;}});
-      return nodes.get(id);
-    };
-    c.document = {getElementById:node,querySelectorAll:()=>[]};
-    c.FormData = class {entries(){return [['email','test@example.com'],['password','testpassword1']];}};
-    c.window.Sentinel.api = async route => route === '/auth/config' ? {googleEnabled:false} : {};
-    c.window.Sentinel.pairExtension = async () => false;
-    vm.runInContext(read('assets/js/auth.js'), c);
-    c.window.Auth.init('login');
-    await submit({preventDefault(){}});
-    assert.equal(new URL(c.location.href, 'https://sentinel.test/site/login.html').href, 'https://sentinel.test/site/app.html', next);
+
+test('all nine pages share the accessible shell and honest preview status', () => {
+  const pages = fs.readdirSync(root).filter(f => f.endsWith('.html'));
+  assert.equal(pages.length, 9);
+  for (const file of pages) {
+    const html = read(file);
+    assert.equal((html.match(/<h1\b/g) || []).length, 1, file);
+    assert.ok(html.includes('href="#main"'), `${file}: skip link`);
+    assert.ok(html.includes('aria-controls="primary-navigation"'), file);
+    assert.ok(html.includes('assets/css/redesign.css'), file);
+    assert.ok(html.includes('data-theme-toggle'), file);
+    assert.ok(html.includes('<footer'), file);
+    assert.ok(!/<script[^>]+(?:intro|cosmos|motion|lux|hover|binary)\.js/.test(html), file);
+    assert.ok(!html.includes('Sentinel live'), file);
+    assert.ok(!html.includes('user-scalable=no'), file);
   }
 });
 
-function severityPreview() {
-  const timers = new Map();
-  const events = {};
-  let sequence = 0;
-  const button = tone => ({
-    dataset: tone ? {sev:tone} : {}, attributes:{}, handlers:{},
-    setAttribute(key, value) {this.attributes[key] = value;},
-    addEventListener(name, handler) {this.handlers[name] = handler;},
-    click() {this.handlers.click();}
-  });
-  const cards = ['Scam','Virus','Malware'].map((name, index) => ({
-    dataset:{severity:['red','orange','yellow'][index]},
-    buttons:['yellow','orange','red'].map(button),
-    style:{setProperty(){}},
-    querySelector(){return {textContent:name};},
-    querySelectorAll(selector){return selector === '[data-sev]' ? this.buttons : [];},
-    append(control){this.control = control;}
-  }));
-  const document = {
-    hidden:false,
-    querySelector(){return null;},
-    querySelectorAll(selector){return selector === '[data-trio]' ? cards : [];},
-    createElement(){return button();},
-    addEventListener(name, handler){(events[name] ||= []).push(handler);}
-  };
-  const sandbox = {
-    document, window:{SentinelMasks:{paint(){}}},
-    matchMedia:()=>({matches:false}), navigator:{platform:'Win32',userAgent:''},
-    addEventListener:document.addEventListener,
-    setInterval(callback){const id = ++sequence; timers.set(id, callback); return id;},
-    clearInterval(id){timers.delete(id);}, clearTimeout(){},
-  };
-  vm.runInNewContext(read('assets/js/site.js'), sandbox);
-  return {cards, timers, document, events, tick(){[...timers.values()].forEach(callback=>callback());}};
+test('download is disabled in the HTML and cannot activate from a network response', () => {
+  const html = read('download.html');
+  const anchor = html.match(/<a\b[^>]*data-installer[^>]*>/)[0];
+  assert.ok(anchor.includes('aria-disabled="true"'));
+  assert.ok(!/\bhref=/.test(anchor));
+  let requested = false;
+  const attrs = new Map([['href','https://example.invalid/download']]);
+  const button = {removeAttribute:key=>attrs.delete(key),setAttribute:(k,v)=>attrs.set(k,v),classList:{add(){}}};
+  vm.runInNewContext(read('assets/js/download.js'), {document:{querySelector:()=>button}, fetch:()=>{requested = true;}});
+  assert.equal(requested, false);
+  assert.equal(attrs.get('aria-disabled'), 'true');
+  assert.equal(attrs.has('href'), false);
+});
+
+function engine(fetcher) {
+  const c = {window:{}, document:{currentScript:{src:'https://sentinel.test/assets/js/engine.js'}},
+    URL, Response, Blob, DecompressionStream, TextDecoder, Uint8Array, fetch:fetcher};
+  vm.runInNewContext(read('assets/js/engine.js'), c);
+  return c.window.SentinelEngine;
 }
 
-test('severity cycles wrap, pause, resume and restart from the selected stage', () => {
-  const preview = severityPreview();
-  const card = preview.cards[0];
-  assert.equal(preview.timers.size, 0);
-  card.buttons[0].click();
-  assert.equal(card.dataset.severity, 'yellow');
-  assert.equal(card.control.textContent, 'Pause cycle');
-  for (const expected of ['orange','red','yellow']) {
-    preview.tick();
-    assert.equal(card.dataset.severity, expected);
-    assert.equal(card.buttons.filter(b=>b.attributes['aria-pressed']==='true').length, 1);
+test('the real local URL engine loads only its bundled word list and finds address warnings', async () => {
+  const calls = [];
+  const scanner = engine(async url => {
+    calls.push(url);
+    assert.equal(url, 'https://sentinel.test/assets/data/words.txt.gz');
+    return new Response(fs.readFileSync(path.join(root,'assets/data/words.txt.gz')));
+  });
+  for (const raw of ['https://www.wikipedia.org', 'https://paypal-account-verify.com/login', 'https://files-share.site/Invoice.pdf.exe']) {
+    const v = await scanner.scan(raw);
+    assert.equal(v.ok,true,raw); assert.equal(v.local,true);
+    assert.equal(Boolean(v.partial),false);
+    if (raw.includes('pdf.exe')) assert.ok(v.threats.virus.badge);
+    if (raw.includes('paypal-account')) assert.ok(v.threats.scam.badge);
+    if (raw.includes('wikipedia')) assert.equal(v.overall.badge,null);
   }
-  card.control.click();
-  preview.tick();
-  assert.equal(card.dataset.severity, 'yellow');
-  assert.equal(preview.timers.size, 0);
-  card.control.click();
-  preview.tick();
-  assert.equal(card.dataset.severity, 'orange');
-  card.buttons[2].click();
-  assert.equal(preview.timers.size, 1);
-  preview.tick();
-  assert.equal(card.dataset.severity, 'yellow');
+  assert.equal(calls.length,1);
 });
 
-test('each card cycles independently and hidden pages pause all active cycles', () => {
-  const preview = severityPreview();
-  preview.cards[0].buttons[0].click();
-  preview.cards[1].buttons[2].click();
-  preview.tick();
-  assert.deepEqual(preview.cards.map(c=>c.dataset.severity), ['orange','yellow','yellow']);
-  preview.cards[0].control.click();
-  assert.equal(preview.timers.size, 1);
-  preview.tick();
-  assert.deepEqual(preview.cards.map(c=>c.dataset.severity), ['orange','orange','yellow']);
-  preview.document.hidden = true;
-  preview.events.visibilitychange.forEach(callback=>callback());
-  assert.equal(preview.timers.size, 0);
-  assert.equal(preview.cards[1].control.textContent, 'Resume cycle');
+test('invalid URL schemes are rejected and failed local data loads can recover', async () => {
+  let calls = 0;
+  const scanner = engine(async () => {
+    calls++;
+    if (calls === 1) throw new Error('offline');
+    return new Response(fs.readFileSync(path.join(root,'assets/data/words.txt.gz')));
+  });
+  assert.equal((await scanner.scan('javascript:alert(1)')).ok,false);
+  assert.equal((await scanner.scan('https://paypal-account-verify.com/login')).ok,true);
+  assert.ok(calls >= 2);
+});
+
+test('practice has twelve messages with valid clues and correct scoring', () => {
+  const practice = require('../assets/js/practice.js');
+  assert.equal(practice.MESSAGES.length,12);
+  const perfect = Object.fromEntries(practice.MESSAGES.map(m=>[m.id,m.scam?'scam':'real']));
+  assert.deepEqual(practice.score(perfect),{right:12,total:12,missed:[]});
+  for (const m of practice.MESSAGES) {
+    assert.ok(practice.clueOrder(m).length > 0);
+    for (const key of practice.clueOrder(m)) assert.ok(m.clues[key]?.why);
+  }
+  const first = practice.MESSAGES[0];
+  const wrong = {[first.id]:first.scam?'real':'scam'};
+  assert.equal(practice.score(wrong).right,0);
+  assert.deepEqual(practice.score(wrong).missed,[first.id]);
+});
+
+test('recovery deduplicates steps, prioritizes immediate action, and filters unrecognized inputs', () => {
+  const recovery = require('../assets/js/recover.js');
+  const steps = recovery.plan(['password','code','remote','card','remote']);
+  assert.equal(new Set(steps.map(s=>s.id)).size,steps.length);
+  assert.equal(steps[0].id,'stop');
+  assert.ok(steps.find(s=>s.id==='offline'));
+  assert.ok(steps.find(s=>s.id==='card'));
+  assert.ok(steps.every((s,i)=>i===0 || s.when>=steps[i-1].when));
+  assert.deepEqual(recovery.happenedFrom('?happened=password,remote,password,unknown'),['password','remote']);
+  assert.deepEqual(recovery.plan([]),[]);
+});
+
+test('both theme palettes meet normal text contrast on primary and card surfaces', () => {
+  const css = read('assets/css/redesign.css');
+  const blocks = [css.match(/:root\s*{([\s\S]*?)}/)[1],css.match(/:root\[data-theme="light"\]\s*{([\s\S]*?)}/)[1]];
+  const lum = hex => {
+    if (hex.length===4) hex='#'+hex.slice(1).split('').map(c=>c+c).join('');
+    const c = hex.slice(1).match(/../g).map(v=>parseInt(v,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);
+    return .2126*c[0]+.7152*c[1]+.0722*c[2];
+  };
+  for (const block of blocks) {
+    const values = Object.fromEntries([...block.matchAll(/--([\w-]+):\s*(#[\da-f]{3,6})\s*;/g)].map(m=>[m[1],m[2]]));
+    for (const fg of ['text','text-2','muted','gold-400','yellow','orange','red','green']) {
+      for (const bg of ['bg','surface']) {
+        const a=lum(values[fg]),b=lum(values[bg]);
+        assert.ok((Math.max(a,b)+.05)/(Math.min(a,b)+.05)>=4.5,`${fg} on ${bg}`);
+      }
+    }
+    const a=lum(values['gold-400']),b=lum(values['on-gold']);
+    assert.ok((Math.max(a,b)+.05)/(Math.min(a,b)+.05)>=4.5,'CTA text');
+  }
 });

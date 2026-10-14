@@ -1,23 +1,7 @@
-# Sentinel
+# Sentinel independent development preview
 
-> Sentinel unmasks the internet: it checks the links in your search results, the messages in your inbox and the files you download, and marks the dangerous ones with a coloured mask before you open them. Yellow means look closer, orange means probably dangerous, red means Sentinel has proof.
+This static website demonstrates Sentinel's intended scam, virus and malware warnings. It is an independent development line, not a production deployment.
 
-Sentinel has a Windows app with live scanning (marks beside search results in Chrome, Edge, Firefox, Brave and Opera, inbox marks in Gmail and Outlook on the web, download protection) and a web app for scanning a link, a file or a pasted email. There is a free plan with no card needed; Pro, Max and Ultimate add research of every result, email and download protection.
+Available here: a browser-local address checker, saved search-verdict snapshots, a severity explorer, a six-round link game, a twelve-message practice inbox and a recovery checklist stored on the local device.
 
-## Pages
-
-- [Home](https://wyattbombara.github.io/sentinel/): what Sentinel does, the three masks (scam, virus, malware), how a verdict is reached
-- [Download](https://wyattbombara.github.io/sentinel/download): the Windows app, release notes, the optional browser companion
-- [Pricing](https://wyattbombara.github.io/sentinel/pricing): Free, Pro, Max and Ultimate, and what each includes
-- [Recovery guide](https://wyattbombara.github.io/sentinel/recover): think you have been scammed? Tick what happened and get an ordered checklist of what to do and where to report it
-- [Spot the scam](https://wyattbombara.github.io/sentinel/practice): a practice inbox of twelve made-up messages; sort each as scam or real, then see the clues that give it away
-- [Privacy Policy](https://wyattbombara.github.io/sentinel/privacy): what Sentinel reads, keeps and never does
-- [Terms](https://wyattbombara.github.io/sentinel/terms): the terms of use
-- [Refund Policy](https://wyattbombara.github.io/sentinel/refunds): refunds, in plain words
-
-## Facts
-
-- Sentinel checks addresses, not page contents: it never records what you type or reads pages behind your logins.
-- Private and incognito windows are protected and nothing about them is kept.
-- Downloads are analysed on your own computer; only a SHA-256 fingerprint is compared online.
-- Source and releases: https://github.com/zzilinct/Sentinel
+Unavailable here: accounts, payments, file uploads, researched/live scans and downloadable installers or browser companions. The local checker does not visit submitted addresses or query online threat lists. Free $0, Pro $15, Max $40 and Ultimate $100 are planned monthly offerings, not active subscriptions.
