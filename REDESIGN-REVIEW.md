@@ -1,24 +1,25 @@
-# Sentinel / The Evidence Room
+# Afterimage — visual rebuild
 
-The user rejected the earlier still-mask and subtle-motion presentations and supplied [Wonderland](https://wonderlandams.com/) as the new reference. The reference was inspected directly in a hidden local browser, including the gallery's opening, scroll-driven camera and suspended exhibits. The borrowed principles are spatial depth, visible movement, sparse navigation and exhibits staged as a place. All Sentinel architecture, exhibit graphics, lighting and motion are authored locally; no Wonderland code or artwork is included.
+The user rejected the prior design, reported no animation and asked to start over, then supplied Refs.Gallery's second 3D page. The gallery and live references were inspected in hidden local browser tabs. Optikka's sculptural material/motion and Max Yinger's assembling forms informed a fresh kinetic identity. Wonderland remains earlier research. No third-party code or artwork was copied, and aesthetic approval is not inferred from test results.
 
-The homepage now opens in a real-time architectural evidence room with successive lit frames, a reflective floor, original typographic exhibits and a rotating mask. A scan travels through the room, the camera drifts and responds to native scroll and the pointer, and the mask turns through a full revolution in approximately fifteen active seconds. The editorial strip, section entrances, button arrows and exhibit hover responses continue the motion elsewhere. The twelve coordinated refresh-copy presets remain; copy stays stable while reading and storage prevents an immediate repeat on refresh when available.
+## Result
 
-The scene is a progressive enhancement. Matching desktop and portrait posters cover reduced motion, data saving and graphics failure; visible headings and working actions remain if artwork fails. Pause controls both 3D and CSS motion. GPU work stops when the hero is offscreen or the page is hidden, pixel density is capped, and animation targets at most 30 fps. These are implementation limits, not a claim of measured performance on every device. The gallery keeps a dark palette in both themes; the surrounding UI supports Auto, Light and Dark.
+The old mask room, static posters and its motion loader are retired from the runtime. A fixed paper hero presents an original 112-part metal sculpture that turns, twists, opens and reforms. New typography, composition, controls, palette, section staging, mask specimens, process, pricing and footer carry the visual system through all nine pages. A moving editorial strip, floating specimens, section entrances and hover responses provide motion beyond the hero. Twelve newly coordinated short headlines vary on refresh while staying stable during reading.
 
-All nine pages share the revised typography, numbered navigation, more open spacing, architectural dividers and section entrances. The local URL checker, example search selection/replay, all severity controls, six-round game, twelve-message practice inbox, pricing recommendation and recovery checklist are retained. The checker still examines the address locally and does not visit the submitted URL. Search verdicts remain saved examples. Monthly plan prices/allowances are unchanged; accounts, payments, uploads, live protection and downloads remain unavailable.
+The motion path now begins with Canvas 2D, using the same geometry as the WebGL sculpture. WebGL is a visual upgrade rather than a prerequisite for motion. A blocked bundle or unavailable graphics context retains an animated sculpture. New asset names avoid relying on cached versions of the retired engine. Animation uses elapsed wall time while active; a slow frame rate does not silently slow the animation clock.
 
-## Source and delivery
+Pause stops rendered movement and CSS loops. The control remains available with reduced motion, which starts still and offers an explicit Play choice. Session preference and the opt-in `?motion=on` preview are supported. Offscreen/hidden scenes stop work; returning with Back resumes correctly. GPU work uses an instanced object without a reflection pass or model fetch, capped pixel density and a 30 fps target. No universal performance claim is made.
 
-- Working branch: `redesign/sentinel-reveal` in `wyattbombara/sentinel-website-dev-line` only.
-- Runtime scene: `design/hero-scene.mjs`; `npm run build:hero` regenerates the bundled asset and linked license notices.
-- Motion coordination: `assets/js/gallery.js`; visual system: `assets/css/reveal.css`.
-- Poster regeneration: `design/capture-posters.cjs`, then `design/prepare-posters.py`; manifest: `design/asset-manifest.json`.
-- The existing `scam.glb`, `virus.glb` and `malware.glb` files are preserved. The prior Blender study remains as editable design history, not the current runtime renderer.
-- Publishing a draft branch alone does not update `main`. The requested delivery is this development repository's main version; its separate Pages workflow validates and publishes that repository. Production `wyattbombara/sentinel` is outside this change.
+## Preserved behavior
 
-## Validation
+The local URL checker, saved-example tabs/replay/detail selection, every severity control, six-round game, twelve-message practice inbox, planned pricing/allowances, recommendation, recovery and legal pages remain. Themes work on the surrounding UI; the hero is deliberately paper-colored in every theme. Existing GLBs are unchanged. The preview still has no account, payment, upload, live-threat or installer service.
 
-The 21 static/DOM regression checks cover the actual local engine, invalid-input recovery, theme/menu controls, pricing, examples, severities, practice, game and recovery. Rendered checks cover nine pages, five viewport sizes and both themes, plus normal/reduced motion, real moving/paused canvas images, all copy presets, refresh variation, no JavaScript and unavailable WebGL. Review screenshots and the JSON report are generated under ignored `test-results/`.
+## Evidence
 
-Visual review is performed in headless local browsers without taking desktop focus. These checks establish functional and layout behavior; aesthetic acceptance remains the user's decision.
+- 21 static/DOM regressions passed, including the actual local word-list engine and output/error handling.
+- 90 page/theme/viewport checks passed, including small phone, tablet, desktop and landscape.
+- Browser checks compared actual canvas pixels while playing and paused in both rendering paths; exercised blocked WebGL/bundle, reduced-motion Play, blocked session storage, browser Back and all interactive flows.
+- All twelve copy variants fit the phone layout with the checker action in the first view. Refresh selection avoids immediate repetition when storage is available.
+- Desktop, phone, fallback and product-section screenshots were inspected locally in background browsers.
+
+The final handoff requires the rebuilt files on development `main`, successful Pages publishing, and motion verification on the deployed URL. The original `wyattbombara/sentinel` repository is outside the change. Live publication is reported separately after verification.
