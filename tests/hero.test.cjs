@@ -1,6 +1,6 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
-const {presets,choose}=require('../assets/js/hero-presets.js');
+const {presets,choose}=require('../assets/js/copy.js');
 
 test('hero copy has twelve coordinated presets and every preset is reachable',()=>{
  assert.equal(presets.length,12);

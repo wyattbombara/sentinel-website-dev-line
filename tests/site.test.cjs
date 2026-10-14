@@ -52,7 +52,7 @@ test('all nine pages share the accessible shell and honest preview status', () =
     assert.equal((html.match(/<h1\b/g) || []).length, 1, file);
     assert.ok(html.includes('href="#main"'), `${file}: skip link`);
     assert.ok(html.includes('aria-controls="primary-navigation"'), file);
-    assert.ok(html.includes('assets/css/redesign.css'), file);
+    assert.ok(html.includes('assets/css/afterimage.css'), file);
     assert.ok(html.includes('data-theme-toggle'), file);
     assert.ok(html.includes('<footer'), file);
     assert.ok(!/<script[^>]+(?:intro|cosmos|motion|lux|hover|binary)\.js/.test(html), file);
@@ -140,7 +140,7 @@ test('recovery deduplicates steps, prioritizes immediate action, and filters unr
 });
 
 test('both theme palettes meet normal text contrast on primary and card surfaces', () => {
-  const css = read('assets/css/redesign.css');
+  const css = read('assets/css/afterimage.css');
   const blocks = [css.match(/:root\s*{([\s\S]*?)}/)[1],css.match(/:root\[data-theme="light"\]\s*{([\s\S]*?)}/)[1]];
   const lum = hex => {
     if (hex.length===4) hex='#'+hex.slice(1).split('').map(c=>c+c).join('');
