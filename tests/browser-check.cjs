@@ -105,8 +105,17 @@ const types={'.html':'text/html','.css':'text/css','.js':'text/javascript','.web
     await moving.goto(`${base}/index.html`);
     await moving.waitForFunction(()=>document.querySelector('.hero--reveal').dataset.renderer==='ready');
     assert.equal(await moving.locator('.hero--reveal').getAttribute('data-motion'),'running');
+    // Prove that rendered pixels move, not just the data-motion label.
+    await moving.waitForTimeout(1000);
+    const firstFrame=await moving.locator('[data-scene] canvas').screenshot();
+    await moving.waitForTimeout(1200);
+    const secondFrame=await moving.locator('[data-scene] canvas').screenshot();
+    assert.ok(!firstFrame.equals(secondFrame),'the 3D room visibly animates');
     await moving.locator('[data-motion-toggle]').click();
     assert.equal(await moving.locator('.hero--reveal').getAttribute('data-motion'),'paused');
+    const pausedFrame=await moving.locator('[data-scene] canvas').screenshot();
+    await moving.waitForTimeout(250);
+    assert.ok(pausedFrame.equals(await moving.locator('[data-scene] canvas').screenshot()),'pause freezes rendered pixels');
     await moving.locator('#stage-demo').scrollIntoViewIfNeeded();
     await moving.locator('#top').scrollIntoViewIfNeeded();
     assert.equal(await moving.locator('.hero--reveal').getAttribute('data-motion'),'paused','manual pause survives leaving the hero');
@@ -150,7 +159,15 @@ const types={'.html':'text/html','.css':'text/css','.js':'text/javascript','.web
     const staticHero=await noGL.newPage();await staticHero.goto(`${base}/index.html`);
     await staticHero.waitForFunction(()=>document.querySelector('.hero--reveal').dataset.renderer==='fallback');
     assert.equal(await staticHero.locator('[data-scene] img').isVisible(),true,'poster replaces unavailable WebGL');
-    assert.equal(await staticHero.locator('h1').isVisible(),true);await noGL.close();
+    assert.equal(await staticHero.locator('h1').isVisible(),true);
+    await staticHero.locator('.evidence-ticker').scrollIntoViewIfNeeded();
+    const ticker=staticHero.locator('.evidence-ticker__track');
+    const tickerBefore=await ticker.evaluate(el=>getComputedStyle(el).transform);
+    await staticHero.waitForTimeout(150);
+    assert.notEqual(await ticker.evaluate(el=>getComputedStyle(el).transform),tickerBefore,'presentation still animates without WebGL');
+    await staticHero.locator('[data-motion-toggle]').click();
+    assert.equal(await ticker.evaluate(el=>getComputedStyle(el).animationPlayState),'paused','the same control pauses CSS motion');
+    await noGL.close();
     const failedArt=await browser.newContext({viewport:{width:375,height:812},colorScheme:'dark'});
     await failedArt.route('**/assets/img/scene/**',route=>route.abort());
     const fallback=await failedArt.newPage();await fallback.goto(`${base}/index.html`);
