@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="robots" content="noindex, nofollow">
-<meta name="sentinel-design-version" content="afterimage-2026-10-14">
+<meta name="sentinel-design-version" content="clarity-2026-10-16">
 <script src="assets/js/static.js"></script>
 <script src="assets/js/boot.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -76,6 +76,12 @@
           <h2>A little clarity.<br><em>Before the click.</em>
 </h2>
           <p data-try-lede>Paste an address and see the warning signs. The check runs locally without opening the site or sending your link anywhere.</p>
+          <div class="address-study" aria-label="Example: the real domain is account-check.example, not PayPal">
+            <span class="address-study__label">READ THE ADDRESS / NOT THE PROMISE</span>
+            <div class="address-study__url"><span>paypal.</span><strong>account-check.example</strong><span>/login</span></div>
+            <div class="address-study__key"><span>Familiar name</span><span>Actual domain <i aria-hidden="true">↑</i></span></div>
+            <p>A brand name at the beginning doesn’t make it the brand’s website. This is an illustrative address.</p>
+          </div>
           <div class="try__examples" aria-label="Examples">
             <span class="muted">Try:</span>
             <button type="button" class="chip-q" data-try-example="paypal-account-verify.com/login">paypal-account-verify.com</button>
@@ -111,6 +117,7 @@
         <h2>Behind every warning.<br><em>A reason you can read.</em></h2>
 </div>
       <div class="stage" id="stage-demo" data-stage>
+        <div class="evidence-index"><span>CASE FILE / 001—003</span><span>SELECT A RESULT. FOLLOW THE REASON.</span></div>
         <div class="stage__glow"></div>
         <div class="stage__controls">
           <div class="stage__chips" role="tablist" aria-label="Example searches">

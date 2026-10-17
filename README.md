@@ -4,6 +4,8 @@ This is the independent development copy of `wyattbombara/sentinel`, originally 
 
 ## Current presentation
 
+The October 16 clarity pass adds an annotated domain study, a dark evidence exhibit and more depth to checker/mask displays. See [CHANGELOG.md](CHANGELOG.md). The homepage build marker is `clarity-2026-10-16`.
+
 The **Afterimage** visual rebuild replaces the old mask room with an original kinetic sculpture: 112 metal plates twist, open, separate and reform. It draws on the sculptural/material and modular-motion ideas observed in [Optikka](https://optikka.com/) and [Max Yinger](https://yinger.dev/), discovered through the user's [3D gallery](https://refs.gallery/category/3d?page=2). No reference code or media was copied.
 
 Animation starts in a small Canvas 2D renderer, then upgrades to an instanced Three.js renderer. Both use the same authored geometry and keep moving if WebGL or its bundle fails. There is no model download, heavy room, reflection pass or poster dependency. The first view uses a fixed paper palette; the product tools support automatic, light and dark themes. New asset filenames keep the new renderer separate from cached older versions.
