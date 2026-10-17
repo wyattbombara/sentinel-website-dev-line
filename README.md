@@ -4,7 +4,7 @@ This is the independent development copy of `wyattbombara/sentinel`, originally 
 
 ## Current presentation
 
-The October 16 clarity pass adds an annotated domain study, a dark evidence exhibit and more depth to checker/mask displays. See [CHANGELOG.md](CHANGELOG.md). The homepage build marker is `clarity-2026-10-16`.
+The October 16 signature pass takes visual reference from the main [Sentinel site](https://wyattbombara.github.io/sentinel/) and [repository](https://github.com/wyattbombara/sentinel) at `1c64ad8`: graphite/gold, mask identity, serif accents and measured drawings. It merges no main-line branch and preserves the independent development workflow. The earlier clarity pass adds an annotated domain study and dark evidence exhibit. See [CHANGELOG.md](CHANGELOG.md). The homepage build marker is `signature-2026-10-16`.
 
 The **Afterimage** visual rebuild replaces the old mask room with an original kinetic sculpture: 112 metal plates twist, open, separate and reform. It draws on the sculptural/material and modular-motion ideas observed in [Optikka](https://optikka.com/) and [Max Yinger](https://yinger.dev/), discovered through the user's [3D gallery](https://refs.gallery/category/3d?page=2). No reference code or media was copied.
 

@@ -33,7 +33,7 @@
         const length=Math.hypot(...normal)||1;normal.forEach((v,k)=>normal[k]=v/length);
         if(normal[2]<0)continue;
         const shine=.35+.45*Math.max(0,normal[1]*.65+normal[0]*-.4+normal[2]*.6)+.2*Math.pow(Math.max(0,normal[2]),12);
-        const rgb=p.orange?[238,108,43]:[211,213,205];
+        const rgb=p.orange?[213,174,95]:[211,211,211];
         polygons.push({z:points.reduce((s,p)=>s+p[2],0)/4,points:points.map(([x,y,z])=>{const lens=9/(9-z);return [width/2+x*scale*lens,height/2-(y+yOffset)*scale*lens];}),color:`rgb(${rgb.map(c=>Math.round(c*shine)).join(',')})`});
       }
     }

@@ -44,7 +44,7 @@ const types={'.html':'text/html','.css':'text/css','.js':'text/javascript','.web
             await page.waitForFunction(()=>document.querySelector('[data-kinetic-hero]').dataset.renderer==='canvas');
             assert.equal(await page.locator('script[src$="/afterimage-scene.js"]').count(),0,'reduced motion does not download WebGL');
             assert.equal(await page.locator('[data-motion-toggle]').innerText(),'Play animation','motion remains available as an explicit choice');
-            assert.equal(await page.locator('h1 [data-copy-first]').evaluate(el=>getComputedStyle(el).color),'rgb(36, 43, 35)','the paper hero has readable type in both themes');
+            assert.equal(await page.locator('h1 [data-copy-first]').evaluate(el=>getComputedStyle(el).color),'rgb(37, 35, 34)','the paper hero has readable type in both themes');
           }
           assert.equal(await page.locator('h1').count(),1,`${name}: heading`);
           const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);

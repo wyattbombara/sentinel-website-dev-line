@@ -20,13 +20,13 @@ if(stage&&form){
     const sculpture=new THREE.InstancedMesh(geometry,material,form.COUNT);sculpture.instanceMatrix.setUsage(THREE.DynamicDrawUsage);sculpture.frustumCulled=false;scene.add(sculpture);
     const rig=new THREE.Group();scene.remove(sculpture);rig.add(sculpture);scene.add(rig);
     const key=new THREE.DirectionalLight('#fff6dd',4.2);key.position.set(-4,5,4);scene.add(key);
-    const rim=new THREE.DirectionalLight('#ff8248',3.6);rim.position.set(4,-1,-3);scene.add(rim);scene.add(new THREE.HemisphereLight('#e7f1ff','#8e6b44',1.2));
+    const rim=new THREE.DirectionalLight('#e4bd72',3.6);rim.position.set(4,-1,-3);scene.add(rim);scene.add(new THREE.HemisphereLight('#e7f1ff','#8e6b44',1.2));
     const dummy=new THREE.Object3D(),color=new THREE.Color();
     function draw(time,pointer,scroll){
       rig.rotation.set(...form.orientation(time,pointer,scroll),'ZYX');rig.position.y=Math.sin(time*.9)*.08;
       for(let i=0;i<form.COUNT;i++){
         const p=form.pose(i,time);dummy.position.set(...p.position);dummy.rotation.set(...p.rotation,'ZYX');dummy.scale.set(1,p.scale,1);dummy.updateMatrix();sculpture.setMatrixAt(i,dummy.matrix);
-        sculpture.setColorAt(i,color.set(p.orange?'#f15c1b':'#dce0d4'));
+        sculpture.setColorAt(i,color.set(p.orange?'#d4ae63':'#dedddd'));
       }
       sculpture.instanceMatrix.needsUpdate=true;sculpture.instanceColor.needsUpdate=true;renderer.render(scene,camera);
     }
